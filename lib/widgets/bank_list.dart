@@ -26,12 +26,16 @@ class BankList extends StatelessWidget {
         itemCount: banks.length,
         itemBuilder: (context, index) {
           final bank = banks[index];
-          return ListTile(
-            title: Text(bank.name),
-            subtitle: Text('Saldo: R\$${bank.balance.toStringAsFixed(2)}'),
-            tileColor: Colors.deepPurple[100],
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          return Card(
+            elevation: 2,
+            color: Colors.red[50],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ListTile(
+              title: Text(bank.name),
+              subtitle: Text('Saldo: R\$${bank.balance.toStringAsFixed(2)}'),
+            ),
           );
         },
         separatorBuilder: (context, index) => const SizedBox(height: 10),

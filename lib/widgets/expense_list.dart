@@ -41,16 +41,20 @@ class ExpenseList extends StatelessWidget {
           final expense = displayedExpenses[index];
           final category =
               categories.firstWhere((cat) => cat.id == expense.categoryId);
-          return ListTile(
-            tileColor: Colors.red[100],
-            leading: Icon(category.icon),
-            title: Text(expense.name),
-            subtitle: Text(
-                '${expense.date.day}/${expense.date.month}/${expense.date.year}'),
-            trailing: Text('R\$${expense.amount.toStringAsFixed(2)}',
-                style: const TextStyle(color: Colors.red)),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          return Card(
+            elevation: 2,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ListTile(
+              leading: Icon(category.icon),
+              title: Text(expense.name),
+              subtitle: Text(
+                  '${expense.date.day}/${expense.date.month}/${expense.date.year}'),
+              trailing: Text('R\$${expense.amount.toStringAsFixed(2)}',
+                  style: const TextStyle(color: Colors.red)),
+            ),
           );
         },
         separatorBuilder: (context, index) => const SizedBox(height: 10),

@@ -13,13 +13,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFEF5354)),
+        scaffoldBackgroundColor: Colors.grey[200],
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'My finance app'),
@@ -138,6 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               ListTile(
                 title: const Text('Saldo total'),
+                titleTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black),
                 subtitle: Text('R\$${netBalance.toStringAsFixed(2)}'),
                 tileColor:
                     netBalance >= 0 ? Colors.green[100] : Colors.red[100],
@@ -162,17 +164,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 displayCount: 4,
                 isHome: true,
               ),
-              // button para ver mais
               const SizedBox(height: 20),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text('Bancos:',
+                  Text('Bancos:',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Adicionar banco')),
                 ],
               ),
               BankList(banks: _banks, isHome: true),
