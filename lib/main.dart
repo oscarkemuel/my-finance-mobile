@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:my_finance/models/bank.dart';
+import 'package:my_finance/models/category.dart';
+import 'package:my_finance/models/expense.dart';
+import 'package:my_finance/models/income.dart';
+import 'package:my_finance/widgets/bank_list.dart';
+import 'package:my_finance/widgets/expense_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,40 +19,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFEF5354)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'My finance app'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -55,71 +37,147 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final _banks = [
+    Bank(name: 'Nubank', balance: 5000, id: 1),
+    Bank(name: 'Inter', balance: 2000, id: 2),
+  ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final _categorys = [
+    Category(id: 1, name: 'Food', icon: Icons.food_bank),
+    Category(id: 2, name: 'Transport', icon: Icons.directions_bus),
+    Category(id: 3, name: 'Health', icon: Icons.local_hospital),
+    Category(id: 4, name: 'Education', icon: Icons.school),
+    Category(id: 5, name: 'Entertainment', icon: Icons.movie),
+    Category(id: 6, name: 'Others', icon: Icons.more_horiz),
+  ];
+
+  final _expenses = [
+    Expense(
+      id: 1,
+      name: 'Pizza',
+      amount: 50,
+      date: DateTime.now(),
+      categoryId: 1,
+      bankId: 1,
+    ),
+    Expense(
+      id: 2,
+      name: 'Bus',
+      amount: 5,
+      date: DateTime.now(),
+      categoryId: 2,
+      bankId: 2,
+    ),
+    Expense(
+      id: 3,
+      name: 'Medicine',
+      amount: 100,
+      date: DateTime.now(),
+      categoryId: 3,
+      bankId: 1,
+    ),
+    Expense(
+      id: 4,
+      name: 'Book',
+      amount: 30,
+      date: DateTime.now(),
+      categoryId: 4,
+      bankId: 2,
+    ),
+    Expense(
+      id: 5,
+      name: 'Movie',
+      amount: 20,
+      date: DateTime.now(),
+      categoryId: 5,
+      bankId: 1,
+    ),
+    Expense(
+      id: 6,
+      name: 'Others',
+      amount: 10,
+      date: DateTime.now(),
+      categoryId: 6,
+      bankId: 2,
+    ),
+  ];
+
+  final _incomes = [
+    Income(
+      id: 1,
+      name: 'Salary',
+      amount: 5000,
+      date: DateTime.now(),
+    ),
+    Income(
+      id: 2,
+      name: 'Freelancer',
+      amount: 2000,
+      date: DateTime.now(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final totalIncome = _incomes.fold(0.0, (sum, item) => sum + item.amount);
+    final totalExpense = _expenses.fold(0.0, (sum, item) => sum + item.amount);
+    final netBalance = totalIncome - totalExpense;
+
+    _expenses.sort((a, b) => b.date.compareTo(a.date));
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        titleTextStyle: const TextStyle(color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              ListTile(
+                title: const Text('Saldo total'),
+                subtitle: Text('R\$${netBalance.toStringAsFixed(2)}'),
+                tileColor:
+                    netBalance >= 0 ? Colors.green[100] : Colors.red[100],
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text('Últimas despesas:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ElevatedButton(
+                      onPressed: () {}, child: const Text('Ver mais')),
+                ],
+              ),
+              ExpenseList(
+                expenses: _expenses,
+                categories: _categorys,
+                displayCount: 4,
+                isHome: true,
+              ),
+              // button para ver mais
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text('Bancos:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ElevatedButton(
+                      onPressed: () {}, child: const Text('Adicionar banco')),
+                ],
+              ),
+              BankList(banks: _banks, isHome: true),
+            ],
+          )),
     );
   }
 }
