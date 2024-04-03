@@ -3,6 +3,7 @@ import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
+import 'package:my_finance/utils/app_routes.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 
@@ -16,14 +17,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFEF5354)),
-        scaffoldBackgroundColor: Colors.grey[200],
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'My finance app'),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFEF5354)),
+          scaffoldBackgroundColor: Colors.grey[200],
+          useMaterial3: true,
+        ),
+        // home: const MyHomePage(title: 'My finance app'),
+        initialRoute: '/',
+        routes: {
+          AppRoutes.HOME: (context) =>
+              const MyHomePage(title: 'My finance app'),
+        });
   }
 }
 
