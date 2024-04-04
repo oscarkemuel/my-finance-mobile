@@ -3,46 +3,29 @@ import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
-import 'package:my_finance/widgets/bank_list.dart';
-import 'package:my_finance/widgets/expense_list.dart';
+import 'package:my_finance/screens/expenses_screen.dart';
+import 'package:my_finance/screens/home_screen.dart';
+import 'package:my_finance/screens/tabs_screen.dart';
+import 'package:my_finance/utils/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFEF5354)),
-        scaffoldBackgroundColor: Colors.grey[200],
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'My finance app'),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _MyAppState extends State<MyApp> {
   final _banks = [
     Bank(name: 'Nubank', balance: 5000, id: 1),
     Bank(name: 'Inter', balance: 2000, id: 2),
   ];
 
-  final _categorys = [
+  final _categories = [
     Category(id: 1, name: 'Food', icon: Icons.food_bank),
     Category(id: 2, name: 'Transport', icon: Icons.directions_bus),
     Category(id: 3, name: 'Health', icon: Icons.local_hospital),
@@ -106,77 +89,55 @@ class _MyHomePageState extends State<MyHomePage> {
     Income(
       id: 1,
       name: 'Salary',
-      amount: 5000,
+      amount: 3250,
       date: DateTime.now(),
     ),
     Income(
       id: 2,
       name: 'Freelancer',
-      amount: 2000,
+      amount: 500,
       date: DateTime.now(),
     ),
   ];
 
+  // functions expenses
+  void addExpense(Expense expense) {
+    setState(() {
+      _expenses.add(expense);
+    });
+  }
+
+  void deleteExpense(int id) {
+    setState(() {
+      _expenses.removeWhere((element) => element.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final totalIncome = _incomes.fold(0.0, (sum, item) => sum + item.amount);
-    final totalExpense = _expenses.fold(0.0, (sum, item) => sum + item.amount);
-    final netBalance = totalIncome - totalExpense;
-
-    _expenses.sort((a, b) => b.date.compareTo(a.date));
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        titleTextStyle: const TextStyle(color: Colors.white),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              ListTile(
-                title: const Text('Saldo total'),
-                titleTextStyle: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black),
-                subtitle: Text('R\$${netBalance.toStringAsFixed(2)}'),
-                tileColor:
-                    netBalance >= 0 ? Colors.green[100] : Colors.red[100],
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text('Últimas despesas:',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Ver mais')),
-                ],
-              ),
-              ExpenseList(
-                expenses: _expenses,
-                categories: _categorys,
-                displayCount: 4,
-                isHome: true,
-              ),
-              const SizedBox(height: 20),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('Bancos:',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              BankList(banks: _banks, isHome: true),
-            ],
-          )),
+    return MaterialApp(
+      title: 'My finance app',
+      initialRoute: '/',
+      routes: {
+        AppRoutes.DEFAULT: (ctx) => TabsScreen(
+              incomes: _incomes,
+              expenses: _expenses,
+              banks: _banks,
+              categories: _categories,
+            ),
+        AppRoutes.HOME: (ctx) => HomeScreen(
+            incomes: _incomes,
+            expenses: _expenses,
+            banks: _banks,
+            categories: _categories),
+        AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
+              expenses: _expenses,
+              banks: _banks,
+              categories: _categories,
+              onAddExpense: addExpense,
+              onRemoveExpense: deleteExpense,
+            ),
+      },
     );
   }
 }
