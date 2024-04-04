@@ -6,7 +6,7 @@ import 'package:my_finance/models/income.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   final List<Income> incomes;
   final List<Expense> expenses;
   final List<Bank> banks;
@@ -21,21 +21,19 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    final totalIncome =
-        widget.incomes.fold(0.0, (sum, item) => sum + item.amount);
-    final totalExpense =
-        widget.expenses.fold(0.0, (sum, item) => sum + item.amount);
+    final totalIncome = incomes.fold(0.0, (sum, item) => sum + item.amount);
+    final totalExpense = expenses.fold(0.0, (sum, item) => sum + item.amount);
     final netBalance = totalIncome - totalExpense;
 
-    widget.expenses.sort((a, b) => b.date.compareTo(a.date));
+    expenses.sort((a, b) => b.date.compareTo(a.date));
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('My finance'),
+        titleTextStyle: const TextStyle(color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -43,8 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
               IntrinsicHeight(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment
-                      .stretch,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
                       child: Container(
@@ -103,16 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text('Últimas despesas:',
+                  const Text('Últimas despesas',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Ver mais')),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/expenses');
+                      },
+                      child: const Text('Gerenciar')),
                 ],
               ),
               ExpenseList(
-                expenses: widget.expenses,
-                categories: widget.categories,
+                expenses: expenses,
+                categories: categories,
                 displayCount: 4,
                 isHome: true,
               ),
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
-              BankList(banks: widget.banks, isHome: true),
+              BankList(banks: banks, isHome: true),
             ],
           )),
     );

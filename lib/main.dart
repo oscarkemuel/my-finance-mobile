@@ -3,6 +3,7 @@ import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
+import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/tabs_screen.dart';
 import 'package:my_finance/utils/app_routes.dart';
@@ -99,6 +100,19 @@ class _MyAppState extends State<MyApp> {
     ),
   ];
 
+  // functions expenses
+  void addExpense(Expense expense) {
+    setState(() {
+      _expenses.add(expense);
+    });
+  }
+
+  void deleteExpense(int id) {
+    setState(() {
+      _expenses.removeWhere((element) => element.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -115,7 +129,14 @@ class _MyAppState extends State<MyApp> {
             incomes: _incomes,
             expenses: _expenses,
             banks: _banks,
-            categories: _categories)
+            categories: _categories),
+        AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
+              expenses: _expenses,
+              banks: _banks,
+              categories: _categories,
+              onAddExpense: addExpense,
+              onRemoveExpense: deleteExpense,
+            ),
       },
     );
   }

@@ -37,7 +37,7 @@ class _TabsScreenState extends State<TabsScreen> {
         expenses: widget.expenses,
         banks: widget.banks,
         categories: widget.categories,
-      )
+      ),
     ];
   }
 
@@ -50,21 +50,12 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("My finance app"),
-          titleTextStyle: const TextStyle(color: Colors.white),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
         body: _screens[_selectedScreenIndex],
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.money_off),
-              label: 'Despesas',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_balance),
@@ -82,6 +73,7 @@ class _TabsScreenState extends State<TabsScreen> {
           onTap: _selectScreen,
           currentIndex: _selectedScreenIndex,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          showUnselectedLabels: true,
         ));
   }
 }
