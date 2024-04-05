@@ -3,6 +3,7 @@ class Expense {
   String name;
   double amount;
   DateTime date;
+  DateTime createdDate = DateTime.now();
   int categoryId;
   int bankId;
 

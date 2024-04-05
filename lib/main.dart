@@ -21,31 +21,33 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _banks = [
+    Bank(name: 'Desconhecido', balance: 0, id: 0),
     Bank(name: 'Nubank', balance: 5000, id: 1),
     Bank(name: 'Inter', balance: 2000, id: 2),
   ];
 
   final _categories = [
-    Category(id: 1, name: 'Food', icon: Icons.food_bank),
-    Category(id: 2, name: 'Transport', icon: Icons.directions_bus),
-    Category(id: 3, name: 'Health', icon: Icons.local_hospital),
-    Category(id: 4, name: 'Education', icon: Icons.school),
-    Category(id: 5, name: 'Entertainment', icon: Icons.movie),
-    Category(id: 6, name: 'Others', icon: Icons.more_horiz),
+    Category(id: 0, name: 'Desconhecida', icon: Icons.help),
+    Category(id: 1, name: 'Comida', icon: Icons.food_bank),
+    Category(id: 2, name: 'Transporte', icon: Icons.directions_bus),
+    Category(id: 3, name: 'Saúde', icon: Icons.local_hospital),
+    Category(id: 4, name: 'Educação', icon: Icons.school),
+    Category(id: 5, name: 'Entretenimento', icon: Icons.movie),
+    Category(id: 6, name: 'Outros', icon: Icons.more_horiz),
   ];
 
   final _expenses = [
     Expense(
       id: 1,
-      name: 'Pizza',
+      name: 'Pizzaria',
       amount: 50,
-      date: DateTime.now(),
+      date: DateTime.parse('2021-09-01'),
       categoryId: 1,
       bankId: 1,
     ),
     Expense(
       id: 2,
-      name: 'Bus',
+      name: 'Onibus mensal',
       amount: 5,
       date: DateTime.now(),
       categoryId: 2,
@@ -53,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     ),
     Expense(
       id: 3,
-      name: 'Medicine',
+      name: 'Consuta ao oftalmologista',
       amount: 100,
       date: DateTime.now(),
       categoryId: 3,
@@ -61,7 +63,7 @@ class _MyAppState extends State<MyApp> {
     ),
     Expense(
       id: 4,
-      name: 'Book',
+      name: 'Livro',
       amount: 30,
       date: DateTime.now(),
       categoryId: 4,
@@ -69,7 +71,7 @@ class _MyAppState extends State<MyApp> {
     ),
     Expense(
       id: 5,
-      name: 'Movie',
+      name: 'Cinema',
       amount: 20,
       date: DateTime.now(),
       categoryId: 5,
@@ -77,7 +79,7 @@ class _MyAppState extends State<MyApp> {
     ),
     Expense(
       id: 6,
-      name: 'Others',
+      name: 'Outros',
       amount: 10,
       date: DateTime.now(),
       categoryId: 6,
