@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
@@ -6,6 +7,7 @@ import 'package:my_finance/models/income.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,10 +42,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final totalExpense =
         widget.expenses.fold(0.0, (sum, item) => sum + item.amount);
     final netBalance = totalIncome - totalExpense;
+    final expensePercentage =
+        totalIncome > 0 ? (totalExpense / totalIncome) * 100 : 0;
+    final roundedExpensePercentage =
+        double.parse(expensePercentage.toStringAsFixed(2));
+    final roundedRemainingPercentage =
+        double.parse((100 - expensePercentage).toStringAsFixed(2));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My finance'),
+        title: const Text('My Finance'),
         titleTextStyle: const TextStyle(color: Colors.white),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
@@ -51,6 +59,32 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            SfCircularChart(
+              legend: Legend(
+                isVisible: true,
+                overflowMode: LegendItemOverflowMode.wrap,
+                position: LegendPosition.bottom,
+              ),
+              series: <DoughnutSeries>[
+                DoughnutSeries<ChartData, String>(
+                  dataSource: [
+                    ChartData('Usado', roundedExpensePercentage),
+                    ChartData('Receita total', roundedRemainingPercentage),
+                  ],
+                  xValueMapper: (ChartData data, _) => data.category,
+                  yValueMapper: (ChartData data, _) => data.value,
+                  dataLabelMapper: (ChartData data, _) => '${data.value}%',
+                  dataLabelSettings: const DataLabelSettings(
+                    isVisible: true,
+                    labelPosition: ChartDataLabelPosition.inside,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                  enableTooltip: true,
+                  radius: '100%',
+                  innerRadius: '60%',
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             IntrinsicHeight(
               child: Row(
@@ -142,4 +176,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+class ChartData {
+  ChartData(this.category, this.value);
+
+  final String category;
+  final double value;
 }
