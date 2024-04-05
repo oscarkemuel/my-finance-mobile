@@ -68,35 +68,46 @@ class ExpensesScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
               children: [
-                const Text(
-                  'Despesas',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Despesas',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton(
+                        onPressed: () => openExpenseFormModal(context),
+                        child: const Icon(
+                          Icons.add,
+                        )),
+                  ],
                 ),
-                ElevatedButton(
-                    onPressed: () => openExpenseFormModal(context),
-                    child: const Icon(
-                      Icons.add,
-                    )),
+                const SizedBox(height: 10),
               ],
             ),
-            const SizedBox(height: 10),
-            ExpenseList(
-              expenses: expenses,
-              categories: categories,
-              banks: banks,
-              onTap: (expense) => openModalToDeleteExpense(context, expense)
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0),
+              child: ExpenseList(
+                expenses: expenses,
+                categories: categories,
+                banks: banks,
+                onTap: (expense) => openModalToDeleteExpense(context, expense),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

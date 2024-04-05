@@ -57,8 +57,8 @@ class _BankFormState extends State<BankForm> {
           TextField(
             controller: _balanceController,
             decoration: const InputDecoration(
-              hintText: 'Saldo inicial',
-              labelText: 'Saldo',
+              hintText: 'Crédito',
+              labelText: 'Crédito',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),

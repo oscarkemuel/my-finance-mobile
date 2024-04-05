@@ -68,16 +68,28 @@ class _BanksScreenState extends State<BanksScreen> {
         titleTextStyle: const TextStyle(color: Colors.white),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            BankList(
-              banks: widget.banks,
-              onTap: (bank) => _openModalToDeleteBank(context, bank),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Bancos',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: BankList(
+                banks: widget.banks,
+                onTap: (bank) => _openModalToDeleteBank(context, bank),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openBankFormModal(context),
@@ -86,4 +98,3 @@ class _BanksScreenState extends State<BanksScreen> {
     );
   }
 }
-

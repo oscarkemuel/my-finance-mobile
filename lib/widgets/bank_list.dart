@@ -40,7 +40,7 @@ class BankList extends StatelessWidget {
             ),
             child: ListTile(
               title: Text(bank.name),
-              subtitle: Text('Saldo: R\$${bank.balance.toStringAsFixed(2)}'),
+              subtitle: Text('Crédito: R\$${bank.balance.toStringAsFixed(2)}'),
               onTap: onTap != null ? () => onTap!(bank) : null,
             ),
           );
