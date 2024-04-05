@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
+import 'package:my_finance/models/income.dart';
 import 'package:intl/intl.dart';
 
-class BankList extends StatelessWidget {
-  final List<Bank> banks;
+class IncomeList extends StatelessWidget {
+  final List<Income> incomes;
   final bool? isHome;
-  final Function(Bank bank)? onTap;
+  final Function(Income income)? onTap;
 
-  const BankList({
+  const IncomeList({
     super.key,
-    required this.banks,
+    required this.incomes,
     this.isHome,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (banks.isEmpty || banks.length == 1) {
+    if (incomes.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(16.0),
-        child: Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 16)),
+        child: Text("Nenhuma receita cadastrada.", style: TextStyle(fontSize: 16)),
       );
     }
 
@@ -30,17 +30,17 @@ class BankList extends StatelessWidget {
         physics: isHome == true
             ? const NeverScrollableScrollPhysics()
             : const AlwaysScrollableScrollPhysics(),
-        itemCount: banks.length - 1,
+        itemCount: incomes.length,
         itemBuilder: (context, index) {
-          final bank = banks[index + 1];
+          final income = incomes[index];
           return Card(
             elevation: 2,
-            color: Colors.deepPurple[50],
+            color: Colors.green[100],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
             child: ListTile(
-              title: Text(bank.name),
+              title: Text(income.name),
               titleTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -48,15 +48,15 @@ class BankList extends StatelessWidget {
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Crédito'),
-                  const SizedBox(width: 8),
                   Text(
                     NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                        .format(bank.balance),
+                        .format(income.amount),
                   ),
+                  const SizedBox(width: 8),
+                  Text(DateFormat('dd/MM/yyyy').format(income.date)),
                 ],
               ),
-              onTap: onTap != null ? () => onTap!(bank) : null,
+              onTap: onTap != null ? () => onTap!(income) : null,
             ),
           );
         },

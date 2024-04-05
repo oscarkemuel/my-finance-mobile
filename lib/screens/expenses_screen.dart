@@ -41,7 +41,9 @@ class ExpensesScreen extends StatelessWidget {
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: const Text('Excluir despesa'),
+            title: Text('Excluir "${expense.name}"'),
+            titleTextStyle: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
             content: const Text('Deseja realmente excluir esta despesa?'),
             actions: [
               TextButton(
@@ -53,7 +55,7 @@ class ExpensesScreen extends StatelessWidget {
                   onRemoveExpense(expense.id);
                   Navigator.of(context).pop();
                 },
-                child: const Text('Excluir'),
+                child: const Text('Excluir', style: TextStyle(color: Colors.red))
               ),
             ],
           );
@@ -97,8 +99,7 @@ class ExpensesScreen extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ExpenseList(
                 expenses: expenses,
                 categories: categories,

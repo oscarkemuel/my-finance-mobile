@@ -33,64 +33,81 @@ class _MyAppState extends State<MyApp> {
     Category(id: 3, name: 'Saúde', icon: Icons.local_hospital),
     Category(id: 4, name: 'Educação', icon: Icons.school),
     Category(id: 5, name: 'Entretenimento', icon: Icons.movie),
-    Category(id: 6, name: 'Outros', icon: Icons.more_horiz),
+    Category(id: 6, name: 'Serviços', icon: Icons.settings),
+    Category(id: 7, name: 'Outros', icon: Icons.more_horiz),
   ];
 
   final _expenses = [
     Expense(
       id: 1,
-      name: 'Pizzaria',
-      amount: 50,
-      date: DateTime.parse('2021-09-01'),
-      categoryId: 1,
-      bankId: 1,
-    ),
-    Expense(
-      id: 2,
-      name: 'Onibus mensal',
-      amount: 5,
-      date: DateTime.now(),
-      categoryId: 2,
+      name: 'CDB',
+      amount: 1250,
+      date: DateTime.parse('2024-01-10'),
+      categoryId: 7,
       bankId: 2,
     ),
     Expense(
-      id: 3,
-      name: 'Consuta ao oftalmologista',
-      amount: 100,
-      date: DateTime.now(),
+      id: 2,
+      name: 'Academia',
+      amount: 130,
+      date: DateTime.parse('2024-01-10'),
       categoryId: 3,
       bankId: 1,
     ),
     Expense(
+      id: 3,
+      name: 'Internet',
+      amount: 106,
+      date: DateTime.parse('2024-01-10'),
+      categoryId: 6,
+      bankId: 1,
+    ),
+    Expense(
+      id: 8,
+      name: 'Uber/99',
+      amount: 250,
+      date: DateTime.parse('2024-01-10'),
+      categoryId: 2,
+      bankId: 1,
+    ),
+    Expense(
       id: 4,
-      name: 'Livro',
-      amount: 30,
-      date: DateTime.now(),
-      categoryId: 4,
-      bankId: 2,
+      name: 'Recarga celular',
+      amount: 25,
+      date: DateTime.parse('2024-01-10'),
+      categoryId: 6,
+      bankId: 1,
     ),
     Expense(
       id: 5,
-      name: 'Cinema',
-      amount: 20,
-      date: DateTime.now(),
+      name: 'Amazon Prime',
+      amount: 15,
+      date: DateTime.parse('2024-01-10'),
       categoryId: 5,
       bankId: 1,
     ),
     Expense(
       id: 6,
-      name: 'Outros',
-      amount: 10,
-      date: DateTime.now(),
+      name: 'Spotify',
+      amount: 12,
+      date: DateTime.parse('2024-01-10'),
+      categoryId: 5,
+      bankId: 1,
+    ),
+    Expense(
+      id: 7,
+      name: 'Google Storage',
+      amount: 8,
+      date: DateTime.parse('2024-01-10'),
       categoryId: 6,
-      bankId: 2,
+      bankId: 1,
     ),
   ];
 
   final _incomes = [
     Income(
       id: 1,
-      name: 'Salary',
+      name: 'Salário',
       amount: 3250,
       date: DateTime.now(),
     ),
@@ -106,6 +123,10 @@ class _MyAppState extends State<MyApp> {
   void addExpense(Expense expense) {
     setState(() {
       _expenses.add(expense);
+    });
+
+    setState(() {
+      _expenses.sort((a, b) => b.date.compareTo(a.date));
     });
   }
 
@@ -136,6 +157,19 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // function incomes
+  void addIncome(Income income) {
+    setState(() {
+      _incomes.add(income);
+    });
+  }
+
+  void deleteIncome(int id) {
+    setState(() {
+      _incomes.removeWhere((element) => element.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -149,6 +183,8 @@ class _MyAppState extends State<MyApp> {
               categories: _categories,
               onAddBank: addBank,
               onRemoveBank: deleteBank,
+              onAddIncome: addIncome,
+              onRemoveIncome: deleteIncome,
             ),
         AppRoutes.HOME: (ctx) => HomeScreen(
             incomes: _incomes,

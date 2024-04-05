@@ -6,6 +6,7 @@ import 'package:my_finance/models/income.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Income> incomes;
@@ -34,11 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalIncome = widget.incomes.fold(0.0, (sum, item) => sum + item.amount);
-    final totalExpense = widget.expenses.fold(0.0, (sum, item) => sum + item.amount);
+    final totalIncome =
+        widget.incomes.fold(0.0, (sum, item) => sum + item.amount);
+    final totalExpense =
+        widget.expenses.fold(0.0, (sum, item) => sum + item.amount);
     final netBalance = totalIncome - totalExpense;
-
-    widget.expenses.sort((a, b) => b.date.compareTo(a.date));
 
     return Scaffold(
       appBar: AppBar(
@@ -59,14 +60,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: netBalance >= 0 ? Colors.green[100] : Colors.red[100],
+                        color: netBalance >= 0
+                            ? Colors.green[100]
+                            : Colors.red[100],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Saldo líquido', style: TextStyle(fontSize: 10)),
-                          Text('R\$${netBalance.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('Saldo líquido',
+                              style: TextStyle(fontSize: 10)),
+                          Text(
+                              NumberFormat.currency(
+                                      locale: 'pt_BR', symbol: 'R\$')
+                                  .format(netBalance),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -82,8 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Receita total', style: TextStyle(fontSize: 10)),
-                          Text('R\$${totalIncome.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('Receita total',
+                              style: TextStyle(fontSize: 10)),
+                          Text(
+                              NumberFormat.currency(
+                                      locale: 'pt_BR', symbol: 'R\$')
+                                  .format(totalIncome),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -96,7 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text('Últimas despesas', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text('Últimas despesas',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ElevatedButton(
                   onPressed: () => _navigateAndDisplayExpenses(context),
                   child: const Text('Gerenciar'),
@@ -113,7 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [Text('Bancos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),],
+              children: [
+                Text('Bancos',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
             ),
             BankList(banks: widget.banks, isHome: true),
           ],

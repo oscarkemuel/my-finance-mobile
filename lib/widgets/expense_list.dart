@@ -57,8 +57,14 @@ class ExpenseList extends StatelessWidget {
               leading: Icon(category.icon),
               title: Text(expense.name),
               subtitle: Text(DateFormat('dd/MM/yyyy').format(expense.date)),
-              trailing: Text('R\$${expense.amount.toStringAsFixed(2)}',
-                  style: const TextStyle(color: Colors.red)),
+              trailing: Text(
+                NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
+                    .format(expense.amount),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45,
+                ),
+              ),
               onTap: onTap == null
                   ? null
                   : () {
