@@ -3,6 +3,7 @@ import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
+import 'package:my_finance/screens/banks_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class TabsScreen extends StatefulWidget {
   final List<Expense> expenses;
   final List<Bank> banks;
   final List<Category> categories;
+  final Function(Bank) onAddBank;
+  final Function(int) onRemoveBank;
 
   const TabsScreen({
     super.key,
@@ -17,6 +20,8 @@ class TabsScreen extends StatefulWidget {
     required this.expenses,
     required this.banks,
     required this.categories,
+    required this.onAddBank,
+    required this.onRemoveBank,
   });
 
   @override
@@ -37,6 +42,11 @@ class _TabsScreenState extends State<TabsScreen> {
         expenses: widget.expenses,
         banks: widget.banks,
         categories: widget.categories,
+      ),
+      BanksScreen(
+        banks: widget.banks,
+        onAddBank: widget.onAddBank,
+        onRemoveBank: widget.onRemoveBank,
       ),
     ];
   }

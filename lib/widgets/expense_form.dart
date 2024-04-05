@@ -122,7 +122,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   ],
                 ),
               ),
-              const SizedBox(width: 16), // Para espaçar os Dropdowns
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

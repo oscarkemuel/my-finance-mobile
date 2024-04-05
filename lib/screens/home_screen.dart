@@ -5,7 +5,7 @@ import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
-import 'package:my_finance/utils/app_routes.dart'; // Certifique-se de que este import esteja correto.
+import 'package:my_finance/utils/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Income> incomes;
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [const Text('Bancos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),],
+              children: [Text('Bancos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),],
             ),
             BankList(banks: widget.banks, isHome: true),
           ],
