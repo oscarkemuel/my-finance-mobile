@@ -73,7 +73,7 @@ class _BanksScreenState extends State<BanksScreen> {
       body: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -84,7 +84,7 @@ class _BanksScreenState extends State<BanksScreen> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: BankList(
                 banks: widget.banks,
                 onTap: (bank) => _openModalToDeleteBank(context, bank),

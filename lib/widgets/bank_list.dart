@@ -18,7 +18,7 @@ class BankList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (banks.isEmpty || banks.length == 1) {
       return const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 16)),
       );
     }

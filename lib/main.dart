@@ -170,6 +170,27 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // function categories
+  void addCategory(Category category) {
+    setState(() {
+      _categories.add(category);
+    });
+  }
+
+  void deleteCategory(int id) {
+    setState(() {
+      _categories.removeWhere((element) => element.id == id);
+    });
+
+    setState(() {
+      for (var element in _expenses) {
+        if (element.categoryId == id) {
+          element.categoryId = 0;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -185,6 +206,8 @@ class _MyAppState extends State<MyApp> {
               onRemoveBank: deleteBank,
               onAddIncome: addIncome,
               onRemoveIncome: deleteIncome,
+              onAddCategory: addCategory,
+              onRemoveCategory: deleteCategory,
             ),
         AppRoutes.HOME: (ctx) => HomeScreen(
             incomes: _incomes,

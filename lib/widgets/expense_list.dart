@@ -29,7 +29,7 @@ class ExpenseList extends StatelessWidget {
 
     if (displayedExpenses.isEmpty) {
       return const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child:
             Text("Nenhuma despesa registrada.", style: TextStyle(fontSize: 16)),
       );

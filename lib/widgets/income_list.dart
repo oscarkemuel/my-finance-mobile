@@ -18,7 +18,7 @@ class IncomeList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (incomes.isEmpty) {
       return const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Text("Nenhuma receita cadastrada.", style: TextStyle(fontSize: 16)),
       );
     }

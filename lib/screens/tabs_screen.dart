@@ -4,6 +4,7 @@ import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
 import 'package:my_finance/screens/banks_screen.dart';
+import 'package:my_finance/screens/categories_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/incomes_screen.dart';
 
@@ -16,6 +17,8 @@ class TabsScreen extends StatefulWidget {
   final Function(int) onRemoveBank;
   final Function(Income) onAddIncome;
   final Function(int) onRemoveIncome;
+  final Function(Category) onAddCategory;
+  final Function(int) onRemoveCategory;
 
   const TabsScreen({
     super.key,
@@ -27,6 +30,8 @@ class TabsScreen extends StatefulWidget {
     required this.onRemoveBank,
     required this.onAddIncome,
     required this.onRemoveIncome,
+    required this.onAddCategory,
+    required this.onRemoveCategory,
   });
 
   @override
@@ -48,15 +53,19 @@ class _TabsScreenState extends State<TabsScreen> {
         banks: widget.banks,
         categories: widget.categories,
       ),
-      BanksScreen(
-        banks: widget.banks,
-        onAddBank: widget.onAddBank,
-        onRemoveBank: widget.onRemoveBank,
-      ),
       IncomesScreen(
         incomes: widget.incomes,
         onAddIncome: widget.onAddIncome,
         onRemoveIncome: widget.onRemoveIncome,
+      ),
+      CategoriesScreen(
+          categories: widget.categories,
+          onAddCategory: widget.onAddCategory,
+          onRemoveCategory: widget.onRemoveCategory),
+      BanksScreen(
+        banks: widget.banks,
+        onAddBank: widget.onAddBank,
+        onRemoveBank: widget.onRemoveBank,
       ),
     ];
   }
@@ -78,14 +87,14 @@ class _TabsScreenState extends State<TabsScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance),
-              label: 'Bancos',
-            ),
-            BottomNavigationBarItem(
                 icon: Icon(Icons.attach_money), label: 'Receitas'),
             BottomNavigationBarItem(
               icon: Icon(Icons.category),
               label: 'Categorias',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance),
+              label: 'Bancos',
             ),
           ],
           selectedItemColor: Theme.of(context).colorScheme.primary,
