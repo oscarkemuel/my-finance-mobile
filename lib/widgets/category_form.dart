@@ -83,7 +83,8 @@ class _CategoryFormState extends State<CategoryForm> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: _selectedIcon == _icons[index]
-                          ? Border.all(color: Theme.of(context).primaryColor, width: 2)
+                          ? Border.all(
+                              color: Theme.of(context).primaryColor, width: 2)
                           : null,
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey[300],
@@ -99,6 +100,9 @@ class _CategoryFormState extends State<CategoryForm> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submit,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
               child: const Text('Adicionar Categoria'),
             ),
           ],
