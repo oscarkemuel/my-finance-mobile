@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
@@ -59,33 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            SfCircularChart(
-              legend: Legend(
-                isVisible: true,
-                overflowMode: LegendItemOverflowMode.wrap,
-                position: LegendPosition.bottom,
-              ),
-              series: <DoughnutSeries>[
-                DoughnutSeries<ChartData, String>(
-                  dataSource: [
-                    ChartData('Usado', roundedExpensePercentage),
-                    ChartData('Receita total', roundedRemainingPercentage),
-                  ],
-                  xValueMapper: (ChartData data, _) => data.category,
-                  yValueMapper: (ChartData data, _) => data.value,
-                  dataLabelMapper: (ChartData data, _) => '${data.value}%',
-                  dataLabelSettings: const DataLabelSettings(
-                    isVisible: true,
-                    labelPosition: ChartDataLabelPosition.inside,
-                    textStyle: TextStyle(color: Colors.white, fontSize: 11),
-                  ),
-                  enableTooltip: true,
-                  radius: '100%',
-                  innerRadius: '60%',
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -140,7 +112,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SfCircularChart(
+              legend: Legend(
+                isVisible: true,
+                overflowMode: LegendItemOverflowMode.wrap,
+                position: LegendPosition.bottom,
+              ),
+              series: <DoughnutSeries>[
+                DoughnutSeries<ChartData, String>(
+                  dataSource: [
+                    ChartData('Usado', roundedExpensePercentage),
+                    ChartData('Receita total', roundedRemainingPercentage),
+                  ],
+                  xValueMapper: (ChartData data, _) => data.category,
+                  yValueMapper: (ChartData data, _) => data.value,
+                  dataLabelMapper: (ChartData data, _) => '${data.value}%',
+                  dataLabelSettings: const DataLabelSettings(
+                    isVisible: true,
+                    labelPosition: ChartDataLabelPosition.inside,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                  enableTooltip: true,
+                  radius: '85%',
+                  innerRadius: '50%',
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
