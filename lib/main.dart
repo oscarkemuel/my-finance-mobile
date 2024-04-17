@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
 import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/tabs_screen.dart';
+import 'package:my_finance/stores/bank.store.dart';
 import 'package:my_finance/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,12 +21,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _banks = [
-    Bank(name: 'Desconhecido', balance: 0, id: 0),
-    Bank(name: 'Nubank', balance: 5000, id: 1),
-    Bank(name: 'Inter', balance: 2000, id: 2),
-  ];
-
   final _categories = [
     Category(id: 0, name: 'Desconhecida', icon: Icons.help),
     Category(id: 1, name: 'Comida', icon: Icons.food_bank),
@@ -136,27 +131,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // functions banks
-  void addBank(Bank bank) {
-    setState(() {
-      _banks.add(bank);
-    });
-  }
-
-  void deleteBank(int id) {
-    setState(() {
-      _banks.removeWhere((element) => element.id == id);
-    });
-
-    setState(() {
-      for (var element in _expenses) {
-        if (element.bankId == id) {
-          element.bankId = 0;
-        }
-      }
-    });
-  }
-
   // function incomes
   void addIncome(Income income) {
     setState(() {
@@ -193,35 +167,37 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My finance app',
-      initialRoute: '/',
-      routes: {
-        AppRoutes.DEFAULT: (ctx) => TabsScreen(
+    return MultiProvider(
+      providers: [
+        Provider<BankStore>(
+          create: (_) => BankStore(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'My finance app',
+        initialRoute: '/',
+        routes: {
+          AppRoutes.DEFAULT: (ctx) => TabsScreen(
+                incomes: _incomes,
+                expenses: _expenses,
+                categories: _categories,
+                onAddIncome: addIncome,
+                onRemoveIncome: deleteIncome,
+                onAddCategory: addCategory,
+                onRemoveCategory: deleteCategory,
+              ),
+          AppRoutes.HOME: (ctx) => HomeScreen(
               incomes: _incomes,
               expenses: _expenses,
-              banks: _banks,
-              categories: _categories,
-              onAddBank: addBank,
-              onRemoveBank: deleteBank,
-              onAddIncome: addIncome,
-              onRemoveIncome: deleteIncome,
-              onAddCategory: addCategory,
-              onRemoveCategory: deleteCategory,
-            ),
-        AppRoutes.HOME: (ctx) => HomeScreen(
-            incomes: _incomes,
-            expenses: _expenses,
-            banks: _banks,
-            categories: _categories),
-        AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
-              expenses: _expenses,
-              banks: _banks,
-              categories: _categories,
-              onAddExpense: addExpense,
-              onRemoveExpense: deleteExpense,
-            ),
-      },
+              categories: _categories),
+          AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
+                expenses: _expenses,
+                categories: _categories,
+                onAddExpense: addExpense,
+                onRemoveExpense: deleteExpense,
+              ),
+        },
+      ),
     );
   }
 }

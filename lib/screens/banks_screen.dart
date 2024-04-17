@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/bank.dart';
+import 'package:my_finance/stores/bank.store.dart';
 import 'package:my_finance/widgets/bank_form.dart';
 import 'package:my_finance/widgets/bank_list.dart';
+import 'package:provider/provider.dart';
 
-class BanksScreen extends StatefulWidget {
-  final List<Bank> banks;
-  final Function(Bank) onAddBank;
-  final Function(int) onRemoveBank;
-
+class BanksScreen extends StatelessWidget {
   const BanksScreen({
     super.key,
-    required this.banks,
-    required this.onAddBank,
-    required this.onRemoveBank,
   });
 
-  @override
-  State<BanksScreen> createState() => _BanksScreenState();
-}
-
-class _BanksScreenState extends State<BanksScreen> {
   void _openBankFormModal(BuildContext context) {
+    final bankStore = Provider.of<BankStore>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return BankForm(
           onSubmit: (bank) {
-            widget.onAddBank(bank);
-            setState(() {});
+            bankStore.addBank(bank);
+            Navigator.of(context).pop();
           },
         );
       },
@@ -35,6 +27,8 @@ class _BanksScreenState extends State<BanksScreen> {
   }
 
   void _openModalToDeleteBank(BuildContext context, Bank bank) {
+    final bankStore = Provider.of<BankStore>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (_) {
@@ -49,13 +43,12 @@ class _BanksScreenState extends State<BanksScreen> {
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {
-                widget.onRemoveBank(bank.id);
-                Navigator.of(context).pop();
-                setState(() {});
-              },
-              child: const Text('Excluir', style: TextStyle(color: Colors.red))
-            ),
+                onPressed: () {
+                  bankStore.removeBank(bank);
+                  Navigator.of(context).pop();
+                },
+                child:
+                    const Text('Excluir', style: TextStyle(color: Colors.red))),
           ],
         );
       },
@@ -83,14 +76,12 @@ class _BanksScreenState extends State<BanksScreen> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: BankList(
-                banks: widget.banks,
-                onTap: (bank) => _openModalToDeleteBank(context, bank),
-              ),
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: BankList(
+              onTap: (bank) => _openModalToDeleteBank(context, bank),
             ),
-          ),
+          )),
         ],
       ),
       floatingActionButton: FloatingActionButton(

@@ -3,16 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
+import 'package:my_finance/stores/bank.store.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseForm extends StatefulWidget {
   final void Function(Expense expense) onSubmit;
-  final List<Bank> banks;
   final List<Category> categories;
 
   const ExpenseForm({
     super.key,
     required this.onSubmit,
-    required this.banks,
     required this.categories,
   });
 
@@ -30,7 +30,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   @override
   void initState() {
     super.initState();
-    _selectedBankId = widget.banks.first.id;
+    _selectedBankId = 0;
     _selectedCategoryId = widget.categories.first.id;
   }
 
@@ -77,6 +77,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
+    final bankStore = Provider.of<BankStore>(context, listen: false);
+    
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(
@@ -106,7 +108,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   child: DropdownButton<int>(
                     isExpanded: true,
                     value: _selectedBankId,
-                    items: widget.banks.map<DropdownMenuItem<int>>((Bank bank) {
+                    items: bankStore.banks.map<DropdownMenuItem<int>>((Bank bank) {
                       return DropdownMenuItem<int>(
                         value: bank.id,
                         child: Text(bank.name),

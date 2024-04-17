@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +6,6 @@ import 'package:intl/intl.dart';
 class ExpenseList extends StatelessWidget {
   final List<Expense> expenses;
   final List<Category> categories;
-  final List<Bank> banks;
   final int? displayCount;
   final bool? isHome;
   final Function(Expense expense)? onTap;
@@ -16,7 +14,6 @@ class ExpenseList extends StatelessWidget {
     super.key,
     required this.expenses,
     required this.categories,
-    required this.banks,
     this.displayCount,
     this.isHome,
     this.onTap,

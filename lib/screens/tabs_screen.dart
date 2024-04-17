@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
@@ -11,10 +10,7 @@ import 'package:my_finance/screens/incomes_screen.dart';
 class TabsScreen extends StatefulWidget {
   final List<Income> incomes;
   final List<Expense> expenses;
-  final List<Bank> banks;
   final List<Category> categories;
-  final Function(Bank) onAddBank;
-  final Function(int) onRemoveBank;
   final Function(Income) onAddIncome;
   final Function(int) onRemoveIncome;
   final Function(Category) onAddCategory;
@@ -24,10 +20,7 @@ class TabsScreen extends StatefulWidget {
     super.key,
     required this.incomes,
     required this.expenses,
-    required this.banks,
     required this.categories,
-    required this.onAddBank,
-    required this.onRemoveBank,
     required this.onAddIncome,
     required this.onRemoveIncome,
     required this.onAddCategory,
@@ -50,7 +43,6 @@ class _TabsScreenState extends State<TabsScreen> {
       HomeScreen(
         incomes: widget.incomes,
         expenses: widget.expenses,
-        banks: widget.banks,
         categories: widget.categories,
       ),
       IncomesScreen(
@@ -62,11 +54,7 @@ class _TabsScreenState extends State<TabsScreen> {
           categories: widget.categories,
           onAddCategory: widget.onAddCategory,
           onRemoveCategory: widget.onRemoveCategory),
-      BanksScreen(
-        banks: widget.banks,
-        onAddBank: widget.onAddBank,
-        onRemoveBank: widget.onRemoveBank,
-      ),
+      const BanksScreen(),
     ];
   }
 

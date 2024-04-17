@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
+import 'package:my_finance/stores/bank.store.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Income> incomes;
   final List<Expense> expenses;
-  final List<Bank> banks;
   final List<Category> categories;
 
   const HomeScreen({
     super.key,
     required this.incomes,
     required this.expenses,
-    required this.banks,
     required this.categories,
   });
 
@@ -36,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bankStore = Provider.of<BankStore>(context, listen: false);
+
     final totalIncome =
         widget.incomes.fold(0.0, (sum, item) => sum + item.amount);
     final totalExpense =
@@ -157,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
               categories: widget.categories,
               displayCount: 4,
               isHome: true,
-              banks: widget.banks,
             ),
             const SizedBox(height: 20),
             const Row(
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
-            BankList(banks: widget.banks, isHome: true),
+            const BankList(isHome: true),
           ],
         ),
       ),

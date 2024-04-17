@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
+import 'package:my_finance/stores/bank.store.dart';
 import 'package:my_finance/widgets/expense_form.dart';
 import 'package:my_finance/widgets/expense_list.dart';
+import 'package:provider/provider.dart';
 
 class ExpensesScreen extends StatefulWidget {
   final List<Expense> expenses;
-  final List<Bank> banks;
   final List<Category> categories;
   final void Function(Expense) onAddExpense;
   final void Function(int id) onRemoveExpense;
@@ -15,7 +15,6 @@ class ExpensesScreen extends StatefulWidget {
   const ExpensesScreen({
     super.key,
     required this.expenses,
-    required this.banks,
     required this.categories,
     required this.onAddExpense,
     required this.onRemoveExpense,
@@ -39,7 +38,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       context: context,
       builder: (_) {
         return ExpenseForm(
-          banks: widget.banks,
           categories: widget.categories,
           onSubmit: widget.onAddExpense,
         );
@@ -86,6 +84,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bankStore = Provider.of<BankStore>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesas'),
@@ -116,7 +116,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             style: TextStyle(fontSize: 12),
                           ))
                     ] +
-                    widget.banks.map((bank) {
+                    bankStore.banks.map((bank) {
                       return DropdownMenuItem<int?>(
                           value: bank.id,
                           child: Text(
@@ -173,7 +173,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 isHome: true,
                 expenses: filteredExpenses,
                 categories: widget.categories,
-                banks: widget.banks,
                 onTap: (expense) => openModalToDeleteExpense(context, expense),
               )
             ],
