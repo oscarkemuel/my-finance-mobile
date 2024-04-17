@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
 import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/tabs_screen.dart';
 import 'package:my_finance/stores/bank.store.dart';
+import 'package:my_finance/stores/category.store.dart';
 import 'package:my_finance/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
@@ -21,17 +21,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _categories = [
-    Category(id: 0, name: 'Desconhecida', icon: Icons.help),
-    Category(id: 1, name: 'Comida', icon: Icons.food_bank),
-    Category(id: 2, name: 'Transporte', icon: Icons.directions_bus),
-    Category(id: 3, name: 'Saúde', icon: Icons.local_hospital),
-    Category(id: 4, name: 'Educação', icon: Icons.school),
-    Category(id: 5, name: 'Entretenimento', icon: Icons.movie),
-    Category(id: 6, name: 'Serviços', icon: Icons.settings),
-    Category(id: 7, name: 'Outros', icon: Icons.more_horiz),
-  ];
-
   final _expenses = [
     Expense(
       id: 1,
@@ -144,33 +133,15 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // function categories
-  void addCategory(Category category) {
-    setState(() {
-      _categories.add(category);
-    });
-  }
-
-  void deleteCategory(int id) {
-    setState(() {
-      _categories.removeWhere((element) => element.id == id);
-    });
-
-    setState(() {
-      for (var element in _expenses) {
-        if (element.categoryId == id) {
-          element.categoryId = 0;
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<BankStore>(
           create: (_) => BankStore(),
+        ),
+        Provider<CategoryStore>(
+          create: (_) => CategoryStore(),
         ),
       ],
       child: MaterialApp(
@@ -180,19 +151,14 @@ class _MyAppState extends State<MyApp> {
           AppRoutes.DEFAULT: (ctx) => TabsScreen(
                 incomes: _incomes,
                 expenses: _expenses,
-                categories: _categories,
                 onAddIncome: addIncome,
                 onRemoveIncome: deleteIncome,
-                onAddCategory: addCategory,
-                onRemoveCategory: deleteCategory,
               ),
           AppRoutes.HOME: (ctx) => HomeScreen(
               incomes: _incomes,
-              expenses: _expenses,
-              categories: _categories),
+              expenses: _expenses),
           AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
                 expenses: _expenses,
-                categories: _categories,
                 onAddExpense: addExpense,
                 onRemoveExpense: deleteExpense,
               ),

@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/stores/bank.store.dart';
+import 'package:my_finance/stores/category.store.dart';
 import 'package:my_finance/widgets/expense_form.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:provider/provider.dart';
 
 class ExpensesScreen extends StatefulWidget {
   final List<Expense> expenses;
-  final List<Category> categories;
   final void Function(Expense) onAddExpense;
   final void Function(int id) onRemoveExpense;
 
   const ExpensesScreen({
     super.key,
     required this.expenses,
-    required this.categories,
     required this.onAddExpense,
     required this.onRemoveExpense,
   });
@@ -38,7 +36,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       context: context,
       builder: (_) {
         return ExpenseForm(
-          categories: widget.categories,
           onSubmit: widget.onAddExpense,
         );
       },
@@ -85,6 +82,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   @override
   Widget build(BuildContext context) {
     final bankStore = Provider.of<BankStore>(context);
+    final categoryStore = Provider.of<CategoryStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -143,7 +141,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             style: TextStyle(fontSize: 12),
                           ))
                     ] +
-                    widget.categories.map((category) {
+                    categoryStore.categories.map((category) {
                       return DropdownMenuItem<int?>(
                           value: category.id,
                           child: Text(
@@ -172,7 +170,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               ExpenseList(
                 isHome: true,
                 expenses: filteredExpenses,
-                categories: widget.categories,
                 onTap: (expense) => openModalToDeleteExpense(context, expense),
               )
             ],

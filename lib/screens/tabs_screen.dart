@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/models/income.dart';
 import 'package:my_finance/screens/banks_screen.dart';
@@ -10,21 +9,15 @@ import 'package:my_finance/screens/incomes_screen.dart';
 class TabsScreen extends StatefulWidget {
   final List<Income> incomes;
   final List<Expense> expenses;
-  final List<Category> categories;
   final Function(Income) onAddIncome;
   final Function(int) onRemoveIncome;
-  final Function(Category) onAddCategory;
-  final Function(int) onRemoveCategory;
 
   const TabsScreen({
     super.key,
     required this.incomes,
     required this.expenses,
-    required this.categories,
     required this.onAddIncome,
     required this.onRemoveIncome,
-    required this.onAddCategory,
-    required this.onRemoveCategory,
   });
 
   @override
@@ -43,17 +36,13 @@ class _TabsScreenState extends State<TabsScreen> {
       HomeScreen(
         incomes: widget.incomes,
         expenses: widget.expenses,
-        categories: widget.categories,
       ),
       IncomesScreen(
         incomes: widget.incomes,
         onAddIncome: widget.onAddIncome,
         onRemoveIncome: widget.onRemoveIncome,
       ),
-      CategoriesScreen(
-          categories: widget.categories,
-          onAddCategory: widget.onAddCategory,
-          onRemoveCategory: widget.onRemoveCategory),
+      const CategoriesScreen(),
       const BanksScreen(),
     ];
   }

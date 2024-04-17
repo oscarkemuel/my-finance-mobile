@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/expense.dart';
-import 'package:my_finance/models/category.dart';
 import 'package:intl/intl.dart';
+import 'package:my_finance/stores/category.store.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseList extends StatelessWidget {
   final List<Expense> expenses;
-  final List<Category> categories;
   final int? displayCount;
   final bool? isHome;
   final Function(Expense expense)? onTap;
@@ -13,7 +13,6 @@ class ExpenseList extends StatelessWidget {
   const ExpenseList({
     super.key,
     required this.expenses,
-    required this.categories,
     this.displayCount,
     this.isHome,
     this.onTap,
@@ -21,6 +20,8 @@ class ExpenseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoryStore = Provider.of<CategoryStore>(context);
+
     List<Expense> displayedExpenses =
         displayCount != null ? expenses.take(displayCount!).toList() : expenses;
 
@@ -43,7 +44,7 @@ class ExpenseList extends StatelessWidget {
         itemBuilder: (context, index) {
           final expense = displayedExpenses[index];
           final category =
-              categories.firstWhere((cat) => cat.id == expense.categoryId);
+              categoryStore.categories.firstWhere((cat) => cat.id == expense.categoryId);
           return Card(
             elevation: 2,
             color: Colors.white,

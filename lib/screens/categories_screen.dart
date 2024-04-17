@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart'; // Import MobX's Observer widget
 import 'package:my_finance/models/category.dart';
+import 'package:my_finance/stores/category.store.dart';
 import 'package:my_finance/widgets/category_form.dart';
+import 'package:provider/provider.dart';
 
-class CategoriesScreen extends StatefulWidget {
-  final List<Category> categories;
-  final Function(Category) onAddCategory;
-  final Function(int) onRemoveCategory;
+class CategoriesScreen extends StatelessWidget {
+  const CategoriesScreen({super.key});
 
-  const CategoriesScreen({
-    super.key,
-    required this.categories,
-    required this.onAddCategory,
-    required this.onRemoveCategory,
-  });
-
-  @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
-}
-
-class _CategoriesScreenState extends State<CategoriesScreen> {
   void _openCategoryFormModal(BuildContext context) {
+    final categoryStore = Provider.of<CategoryStore>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return CategoryForm(
           onSubmit: (category) {
-            widget.onAddCategory(category);
-            setState(() {});
+            categoryStore.addCategory(category);
+            Navigator.of(context).pop();
           },
         );
       },
@@ -34,6 +25,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   void _openModalToDeleteCategory(BuildContext context, Category category) {
+    final categoryStore = Provider.of<CategoryStore>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (_) {
@@ -49,9 +42,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
             TextButton(
               onPressed: () {
-                widget.onRemoveCategory(category.id);
+                categoryStore.removeCategory(category);
                 Navigator.of(context).pop();
-                setState(() {});
               },
               child: const Text('Excluir', style: TextStyle(color: Colors.red)),
             ),
@@ -63,8 +55,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Category> categoriesToShow =
-        widget.categories.length > 1 ? widget.categories.sublist(1) : [];
+    final categoryStore = Provider.of<CategoryStore>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -85,42 +76,51 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
           ),
           Expanded(
-            child: categoriesToShow.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Nenhuma categoria cadastrada.',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  )
-                : GridView.builder(
-                    itemCount: categoriesToShow.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 1,
-                    ),
-                    itemBuilder: (context, index) {
-                      final category = categoriesToShow[index];
-                      return GestureDetector(
-                        onTap: () {
-                          _openModalToDeleteCategory(context, category);
-                        },
-                        child: GridTile(
-                          footer: Center(
-                            child: Text(
-                              category.name,
-                              style: const TextStyle(
-                                  fontSize: 11, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          child: Icon(category.icon,
-                              size: 40, color: Colors.grey[700]),
+            child: Observer(
+              builder: (_) {
+                final List<Category> categoriesToShow =
+                    categoryStore.categories.length > 1
+                        ? categoryStore.categories.sublist(1)
+                        : [];
+
+                return categoriesToShow.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Nenhuma categoria cadastrada.',
+                          style: TextStyle(fontSize: 18),
                         ),
+                      )
+                    : GridView.builder(
+                        itemCount: categoriesToShow.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1,
+                        ),
+                        itemBuilder: (context, index) {
+                          final category = categoriesToShow[index];
+                          return GestureDetector(
+                            onTap: () =>
+                                _openModalToDeleteCategory(context, category),
+                            child: GridTile(
+                              footer: Center(
+                                child: Text(
+                                  category.name,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              child: Icon(category.icon,
+                                  size: 40, color: Colors.grey[700]),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  ),
+              },
+            ),
           ),
         ],
       ),

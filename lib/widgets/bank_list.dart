@@ -60,7 +60,11 @@ class BankList extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () => onTap?.call(bank),
+                onTap: onTap == null
+                  ? null
+                  : () {
+                      onTap!(bank);
+                    },
               ),
             );
           },
