@@ -1,4 +1,3 @@
-
 import 'package:mobx/mobx.dart';
 import 'package:my_finance/models/bank.dart';
 
@@ -13,8 +12,8 @@ abstract class _BankStore with Store {
   _BankStore() {
     banks.add(Bank(id: 0, name: 'Desconhecido', balance: 0));
     
-    banks.add(Bank(id: 1, name: 'Banco 1', balance: 5000));
-    banks.add(Bank(id: 2, name: 'Banco 2', balance: 2000));
+    banks.add(Bank(id: 1, name: 'Nubank', balance: 5000));
+    banks.add(Bank(id: 2, name: 'Inter', balance: 2000));
   }
 
   @action

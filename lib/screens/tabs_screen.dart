@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/expense.dart';
 import 'package:my_finance/screens/banks_screen.dart';
 import 'package:my_finance/screens/categories_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/incomes_screen.dart';
 
 class TabsScreen extends StatefulWidget {
-  final List<Expense> expenses;
-
   const TabsScreen({
     super.key,
-    required this.expenses,
   });
 
   @override
@@ -26,9 +22,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(
-        expenses: widget.expenses,
-      ),
+      HomeScreen(),
       const IncomesScreen(),
       const CategoriesScreen(),
       const BanksScreen(),

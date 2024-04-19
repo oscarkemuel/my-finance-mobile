@@ -57,7 +57,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
     );
 
     widget.onSubmit(expense);
-    Navigator.of(context).pop();
   }
 
   void _presentDatePicker() {

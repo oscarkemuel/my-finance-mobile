@@ -26,4 +26,9 @@ abstract class _IncomeStore with Store {
     final incomeIndex = incomes.indexWhere((i) => i.id == income.id);
     incomes.removeAt(incomeIndex);
   }
+
+  @computed
+  double get totalAmount {
+    return incomes.fold(0.0, (sum, item) => sum + item.amount);
+  }
 }
