@@ -53,7 +53,9 @@ class ExpenseList extends StatelessWidget {
           itemBuilder: (context, index) {
             final expense = displayedExpenses[index];
             final category = categoryStore.categories
-                .firstWhere((cat) => cat.id == expense.categoryId);
+                .firstWhere((c) => c.id == expense.categoryId, orElse: () {
+              return categoryStore.categories.first;
+            });
             return Card(
               elevation: 2,
               color: Colors.white,
