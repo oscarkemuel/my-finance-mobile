@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:my_finance/models/bank.dart';
-import 'package:my_finance/models/category.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/models/expense.dart';
+import 'package:my_finance/stores/bank.store.dart';
+import 'package:my_finance/stores/category.store.dart';
+import 'package:my_finance/stores/expense.store.dart';
 import 'package:my_finance/widgets/expense_form.dart';
 import 'package:my_finance/widgets/expense_list.dart';
+import 'package:provider/provider.dart';
 
 class ExpensesScreen extends StatefulWidget {
-  final List<Expense> expenses;
-  final List<Bank> banks;
-  final List<Category> categories;
-  final void Function(Expense) onAddExpense;
-  final void Function(int id) onRemoveExpense;
-
   const ExpensesScreen({
     super.key,
-    required this.expenses,
-    required this.banks,
-    required this.categories,
-    required this.onAddExpense,
-    required this.onRemoveExpense,
   });
 
   @override
@@ -29,25 +21,25 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   int? selectedBankId;
   int? selectedCategoryId;
 
-  void onSubmitAddExpense(Expense expense) {
-    widget.onAddExpense(expense);
-    Navigator.of(context).pop();
-  }
-
   openExpenseFormModal(BuildContext context) {
+    final expenseStore = Provider.of<ExpenseStore>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return ExpenseForm(
-          banks: widget.banks,
-          categories: widget.categories,
-          onSubmit: widget.onAddExpense,
+          onSubmit: (expense) {
+            expenseStore.addExpense(expense);
+            Navigator.of(context).pop();
+          },
         );
       },
     );
   }
 
   openModalToDeleteExpense(BuildContext context, Expense expense) {
+    final expenseStore = Provider.of<ExpenseStore>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (_) {
@@ -63,7 +55,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  widget.onRemoveExpense(expense.id);
+                  expenseStore.removeExpense(expense);
                   Navigator.of(context).pop();
                 },
                 child:
@@ -74,18 +66,12 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     );
   }
 
-  List<Expense> get filteredExpenses {
-    return widget.expenses.where((expense) {
-      final matchesBank =
-          selectedBankId == null || expense.bankId == selectedBankId;
-      final matchesCategory = selectedCategoryId == null ||
-          expense.categoryId == selectedCategoryId;
-      return matchesBank && matchesCategory;
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bankStore = Provider.of<BankStore>(context);
+    final categoryStore = Provider.of<CategoryStore>(context);
+    final expenseStore = Provider.of<ExpenseStore>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesas'),
@@ -116,7 +102,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             style: TextStyle(fontSize: 12),
                           ))
                     ] +
-                    widget.banks.map((bank) {
+                    bankStore.banks.map((bank) {
                       return DropdownMenuItem<int?>(
                           value: bank.id,
                           child: Text(
@@ -143,7 +129,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             style: TextStyle(fontSize: 12),
                           ))
                     ] +
-                    widget.categories.map((category) {
+                    categoryStore.categories.map((category) {
                       return DropdownMenuItem<int?>(
                           value: category.id,
                           child: Text(
@@ -169,13 +155,29 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              ExpenseList(
-                isHome: true,
-                expenses: filteredExpenses,
-                categories: widget.categories,
-                banks: widget.banks,
-                onTap: (expense) => openModalToDeleteExpense(context, expense),
-              )
+              Observer(builder: (_) {
+                List<Expense> filteredExpenses = expenseStore.expenses;
+
+                if (selectedBankId != null) {
+                  filteredExpenses = filteredExpenses
+                      .where((expense) => expense.bankId == selectedBankId)
+                      .toList();
+                }
+
+                if (selectedCategoryId != null) {
+                  filteredExpenses = filteredExpenses
+                      .where(
+                          (expense) => expense.categoryId == selectedCategoryId)
+                      .toList();
+                }
+
+                return ExpenseList(
+                  isHome: true,
+                  expenses: filteredExpenses,
+                  onTap: (expense) =>
+                      openModalToDeleteExpense(context, expense),
+                );
+              }),
             ],
           ),
         ),

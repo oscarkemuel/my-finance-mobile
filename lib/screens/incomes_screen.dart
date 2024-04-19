@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/income.dart';
+import 'package:my_finance/stores/income.store.dart';
 import 'package:my_finance/widgets/income_form.dart';
 import 'package:my_finance/widgets/income_list.dart';
+import 'package:provider/provider.dart';
 
-class IncomesScreen extends StatefulWidget {
-  final List<Income> incomes;
-  final Function(Income) onAddIncome;
-  final Function(int) onRemoveIncome;
-
+class IncomesScreen extends StatelessWidget {
   const IncomesScreen({
     super.key,
-    required this.incomes,
-    required this.onAddIncome,
-    required this.onRemoveIncome,
   });
 
-  @override
-  State<IncomesScreen> createState() => _IncomesScreenState();
-}
-
-class _IncomesScreenState extends State<IncomesScreen> {
   void _openIncomeFormModal(BuildContext context) {
+    final incomeStore = Provider.of<IncomeStore>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return IncomeForm(
           onSubmit: (income) {
-            widget.onAddIncome(income);
-            setState(() {});
+            incomeStore.addIncome(income);
+            Navigator.of(context).pop();
           },
         );
       },
@@ -35,6 +27,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
   }
 
   void _openModalToDeleteIncome(BuildContext context, Income income) {
+    final incomeStore = Provider.of<IncomeStore>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (_) {
@@ -50,9 +44,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
             ),
             TextButton(
               onPressed: () {
-                widget.onRemoveIncome(income.id);
+                incomeStore.removeIncome(income);
                 Navigator.of(context).pop();
-                setState(() {});
               },
               child: const Text('Excluir', style: TextStyle(color: Colors.red)),
             ),
@@ -86,7 +79,6 @@ class _IncomesScreenState extends State<IncomesScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IncomeList(
-                incomes: widget.incomes,
                 onTap: (income) => _openModalToDeleteIncome(context, income),
               ),
             ),

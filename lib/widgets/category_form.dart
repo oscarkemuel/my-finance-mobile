@@ -44,7 +44,6 @@ class _CategoryFormState extends State<CategoryForm> {
     );
 
     widget.onSubmit(category);
-    Navigator.of(context).pop();
   }
 
   @override

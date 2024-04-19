@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/models/bank.dart';
+import 'package:my_finance/stores/bank_form.store.dart';
 
-class BankForm extends StatefulWidget {
+class BankForm extends StatelessWidget {
   final void Function(Bank bank) onSubmit;
 
   const BankForm({
@@ -10,65 +12,50 @@ class BankForm extends StatefulWidget {
   });
 
   @override
-  State<BankForm> createState() => _BankFormState();
-}
-
-class _BankFormState extends State<BankForm> {
-  final _nameController = TextEditingController();
-  final _balanceController = TextEditingController();
-
-  void _submit() {
-    final name = _nameController.text;
-    final double balance;
-
-    try {
-      balance = double.parse(_balanceController.text);
-    } catch (e) {
-      return;
-    }
-
-    final bank = Bank(
-      id: DateTime.now().millisecondsSinceEpoch,
-      name: name,
-      balance: balance,
-    );
-
-    widget.onSubmit(bank);
-
-    Navigator.of(context).pop();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final store = BankFormStore();
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              hintText: 'Nome do banco',
-              labelText: 'Nome',
+          Observer(
+            builder: (_) => TextField(
+              onChanged: (value) => store.name = value,
+              decoration: const InputDecoration(
+                hintText: 'Nome do banco',
+                labelText: 'Nome',
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          TextField(
-            controller: _balanceController,
-            decoration: const InputDecoration(
-              hintText: 'Crédito',
-              labelText: 'Crédito',
+          Observer(
+            builder: (_) => TextField(
+              onChanged: (value) => store.balance = value,
+              decoration: const InputDecoration(
+                hintText: 'Crédito',
+                labelText: 'Crédito',
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
             ),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => _submit(),
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+          Observer(
+            builder: (_) => ElevatedButton(
+              onPressed: store.canSubmit
+                  ? () {
+                      final bank = store.submit();
+                      onSubmit(bank);
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: const Text('Adicionar banco'),
             ),
-            child: const Text('Adicionar banco'),
           ),
         ],
       ),
