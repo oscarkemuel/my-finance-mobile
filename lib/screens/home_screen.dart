@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/expense.dart';
-import 'package:my_finance/models/income.dart';
+import 'package:my_finance/stores/income.store.dart';
 import 'package:my_finance/widgets/bank_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
-  final List<Income> incomes;
   final List<Expense> expenses;
 
   const HomeScreen({
     super.key,
-    required this.incomes,
     required this.expenses,
   });
 
@@ -30,8 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+  final incomeStore = Provider.of<IncomeStore>(context);
+
     final totalIncome =
-        widget.incomes.fold(0.0, (sum, item) => sum + item.amount);
+        incomeStore.incomes.fold(0.0, (sum, item) => sum + item.amount);
     final totalExpense =
         widget.expenses.fold(0.0, (sum, item) => sum + item.amount);
     final netBalance = totalIncome - totalExpense;

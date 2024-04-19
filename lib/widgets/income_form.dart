@@ -34,7 +34,6 @@ class _IncomeFormState extends State<IncomeForm> {
     );
 
     widget.onSubmit(income);
-    Navigator.of(context).pop();
   }
 
   void _presentDatePicker() {

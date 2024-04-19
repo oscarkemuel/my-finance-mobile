@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/expense.dart';
-import 'package:my_finance/models/income.dart';
 import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/tabs_screen.dart';
 import 'package:my_finance/stores/bank.store.dart';
 import 'package:my_finance/stores/category.store.dart';
+import 'package:my_finance/stores/income.store.dart';
 import 'package:my_finance/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
@@ -88,21 +88,6 @@ class _MyAppState extends State<MyApp> {
     ),
   ];
 
-  final _incomes = [
-    Income(
-      id: 1,
-      name: 'Salário',
-      amount: 3250,
-      date: DateTime.now(),
-    ),
-    Income(
-      id: 2,
-      name: 'Freelancer',
-      amount: 500,
-      date: DateTime.now(),
-    ),
-  ];
-
   // functions expenses
   void addExpense(Expense expense) {
     setState(() {
@@ -120,19 +105,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // function incomes
-  void addIncome(Income income) {
-    setState(() {
-      _incomes.add(income);
-    });
-  }
-
-  void deleteIncome(int id) {
-    setState(() {
-      _incomes.removeWhere((element) => element.id == id);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -143,20 +115,17 @@ class _MyAppState extends State<MyApp> {
         Provider<CategoryStore>(
           create: (_) => CategoryStore(),
         ),
+        Provider<IncomeStore>(create: (_) => IncomeStore()),
       ],
       child: MaterialApp(
         title: 'My finance app',
         initialRoute: '/',
         routes: {
           AppRoutes.DEFAULT: (ctx) => TabsScreen(
-                incomes: _incomes,
-                expenses: _expenses,
-                onAddIncome: addIncome,
-                onRemoveIncome: deleteIncome,
+                expenses: _expenses
               ),
-          AppRoutes.HOME: (ctx) => HomeScreen(
-              incomes: _incomes,
-              expenses: _expenses),
+          AppRoutes.HOME: (ctx) =>
+              HomeScreen(expenses: _expenses),
           AppRoutes.EXPENSES: (ctx) => ExpensesScreen(
                 expenses: _expenses,
                 onAddExpense: addExpense,

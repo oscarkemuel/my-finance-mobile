@@ -1,0 +1,29 @@
+import 'package:mobx/mobx.dart';
+import 'package:my_finance/models/income.dart';
+
+part 'income.store.g.dart';
+
+class IncomeStore = _IncomeStore with _$IncomeStore;
+
+abstract class _IncomeStore with Store {
+  @observable
+  ObservableList<Income> incomes = ObservableList<Income>();
+
+  _IncomeStore() {
+    incomes.add(
+        Income(id: 0, name: 'Salário', amount: 3250, date: DateTime.now()));
+    incomes.add(
+        Income(id: 1, name: 'Freelancer', amount: 500, date: DateTime.now()));
+  }
+
+  @action
+  void addIncome(Income income) {
+    incomes.add(income);
+  }
+
+  @action
+  void removeIncome(Income income) {
+    final incomeIndex = incomes.indexWhere((i) => i.id == income.id);
+    incomes.removeAt(incomeIndex);
+  }
+}
