@@ -33,29 +33,28 @@ mixin _$ExpenseStore on _ExpenseStore, Store {
     });
   }
 
-  late final _$_ExpenseStoreActionController =
-      ActionController(name: '_ExpenseStore', context: context);
+  late final _$_loadExpensesAsyncAction =
+      AsyncAction('_ExpenseStore._loadExpenses', context: context);
 
   @override
-  void addExpense(Expense expense) {
-    final _$actionInfo = _$_ExpenseStoreActionController.startAction(
-        name: '_ExpenseStore.addExpense');
-    try {
-      return super.addExpense(expense);
-    } finally {
-      _$_ExpenseStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> _loadExpenses() {
+    return _$_loadExpensesAsyncAction.run(() => super._loadExpenses());
   }
 
+  late final _$addExpenseAsyncAction =
+      AsyncAction('_ExpenseStore.addExpense', context: context);
+
   @override
-  void removeExpense(Expense expense) {
-    final _$actionInfo = _$_ExpenseStoreActionController.startAction(
-        name: '_ExpenseStore.removeExpense');
-    try {
-      return super.removeExpense(expense);
-    } finally {
-      _$_ExpenseStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> addExpense(Expense expense) {
+    return _$addExpenseAsyncAction.run(() => super.addExpense(expense));
+  }
+
+  late final _$removeExpenseAsyncAction =
+      AsyncAction('_ExpenseStore.removeExpense', context: context);
+
+  @override
+  Future<void> removeExpense(Expense expense) {
+    return _$removeExpenseAsyncAction.run(() => super.removeExpense(expense));
   }
 
   @override

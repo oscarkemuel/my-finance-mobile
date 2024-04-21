@@ -98,7 +98,7 @@ class DB {
         name TEXT NOT NULL,
         amount REAL NOT NULL,
         date TEXT NOT NULL,
-        createdDate TEXT NOT NULL,
+        created_date TEXT NOT NULL,
         category_id INTEGER NOT NULL,
         bank_id INTEGER NOT NULL,
         FOREIGN KEY (category_id) REFERENCES category (id),

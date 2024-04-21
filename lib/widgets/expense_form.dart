@@ -55,6 +55,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
       bankId: _selectedBankId,
       categoryId: _selectedCategoryId,
       date: _selectedDate,
+      createdDate: DateTime.now(),
     );
 
     widget.onSubmit(expense);
