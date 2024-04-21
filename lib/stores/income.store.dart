@@ -3,6 +3,7 @@ import 'package:my_finance/models/income.dart';
 
 part 'income.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class IncomeStore = _IncomeStore with _$IncomeStore;
 
 abstract class _IncomeStore with Store {

@@ -4,6 +4,7 @@ import 'package:my_finance/models/category.dart';
 
 part 'category.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class CategoryStore = _CategoryStore with _$CategoryStore;
 
 abstract class _CategoryStore with Store {

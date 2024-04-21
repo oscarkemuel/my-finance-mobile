@@ -22,7 +22,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(),
+      const HomeScreen(),
       const IncomesScreen(),
       const CategoriesScreen(),
       const BanksScreen(),

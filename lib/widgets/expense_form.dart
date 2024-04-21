@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:my_finance/models/bank.dart';
 import 'package:my_finance/models/category.dart';
@@ -75,9 +76,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    final bankStore = Provider.of<BankStore>(context, listen: false);
+    final bankStore = Provider.of<BankStore>(context);
     final categoryStore = Provider.of<CategoryStore>(context);
-    
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(
@@ -97,49 +98,54 @@ class _ExpenseFormState extends State<ExpenseForm> {
             TextField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Valor da despesa'),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: DropdownButton<int>(
-                    isExpanded: true,
-                    value: _selectedBankId,
-                    items: bankStore.banks.map<DropdownMenuItem<int>>((Bank bank) {
-                      return DropdownMenuItem<int>(
-                        value: bank.id,
-                        child: Text(bank.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedBankId = value!;
-                      });
-                    },
+            Observer(builder: (_) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: DropdownButton<int>(
+                      isExpanded: true,
+                      value: _selectedBankId,
+                      items: bankStore.banks
+                          .map<DropdownMenuItem<int>>((Bank bank) {
+                        return DropdownMenuItem<int>(
+                          value: bank.id,
+                          child: Text(bank.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedBankId = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: DropdownButton<int>(
-                    isExpanded: true,
-                    value: _selectedCategoryId,
-                    items: categoryStore.categories.map<DropdownMenuItem<int>>((Category category) {
-                      return DropdownMenuItem<int>(
-                        value: category.id,
-                        child: Text(category.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCategoryId = value!;
-                      });
-                    },
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: DropdownButton<int>(
+                      isExpanded: true,
+                      value: _selectedCategoryId,
+                      items: categoryStore.categories
+                          .map<DropdownMenuItem<int>>((Category category) {
+                        return DropdownMenuItem<int>(
+                          value: category.id,
+                          child: Text(category.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategoryId = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,9 +166,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 backgroundColor: Colors.green,
-
               ),
-              child: const Text('Adicionar despesa', style: TextStyle(color: Colors.white)),
+              child: const Text('Adicionar despesa',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

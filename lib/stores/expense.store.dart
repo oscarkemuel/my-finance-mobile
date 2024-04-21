@@ -3,6 +3,7 @@ import 'package:my_finance/models/expense.dart';
 
 part 'expense.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class ExpenseStore = _ExpenseStore with _$ExpenseStore;
 
 abstract class _ExpenseStore with Store {
