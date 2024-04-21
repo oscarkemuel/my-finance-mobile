@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/category.dart';
+import 'package:my_finance/utils/index.dart';
 
 class CategoryForm extends StatefulWidget {
   final void Function(Category category) onSubmit;
@@ -15,22 +16,8 @@ class CategoryForm extends StatefulWidget {
 
 class _CategoryFormState extends State<CategoryForm> {
   final _nameController = TextEditingController();
-  IconData? _selectedIcon;
-
-  final List<IconData> _icons = [
-    Icons.home,
-    Icons.fastfood,
-    Icons.movie,
-    Icons.shopping_cart,
-    Icons.flight,
-    Icons.fitness_center,
-    Icons.pets,
-    Icons.settings,
-    Icons.school,
-    Icons.local_hospital,
-    Icons.directions_bus,
-    Icons.more_horiz,
-  ];
+  CategoryIdentifier? _selectedIcon;
+  final _icons = Utils.iconMap;
 
   void _submit() {
     if (_nameController.text.isEmpty || _selectedIcon == null) {
@@ -40,7 +27,7 @@ class _CategoryFormState extends State<CategoryForm> {
     final category = Category(
       id: DateTime.now().millisecondsSinceEpoch,
       name: _nameController.text,
-      icon: _selectedIcon!,
+      icon: _icons[_selectedIcon]!.identifier
     );
 
     widget.onSubmit(category);
@@ -73,15 +60,17 @@ class _CategoryFormState extends State<CategoryForm> {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
+                CategoryIdentifier key = _icons.keys.elementAt(index);
+                CategoryIcon value = _icons[key]!;
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedIcon = _icons[index];
+                      _selectedIcon = key;
                     });
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: _selectedIcon == _icons[index]
+                      border: _selectedIcon == key
                           ? Border.all(
                               color: Theme.of(context).primaryColor, width: 2)
                           : null,
@@ -89,7 +78,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       color: Colors.grey[300],
                     ),
                     child: Icon(
-                      _icons[index],
+                      value.icon,
                       size: 40,
                     ),
                   ),

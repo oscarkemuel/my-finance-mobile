@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:my_finance/utils/index.dart';
 
 class Category {
   int id;
   String name;
-  IconData icon;
+  CategoryIdentifier icon;
 
   Category({
     required this.id,
@@ -15,7 +15,7 @@ class Category {
     return Category(
       id: map['id'],
       name: map['name'],
-      icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
+       icon: Utils.stringToCategoryIdentifier(map['icon'] as String)
     );
   }
 
@@ -23,7 +23,7 @@ class Category {
     return {
       'id': id,
       'name': name,
-      'icon': icon.codePoint,
+      'icon': icon.toString().split('.').last
     };
   }
 }

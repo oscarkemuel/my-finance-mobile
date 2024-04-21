@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:intl/intl.dart';
 import 'package:my_finance/stores/category.store.dart';
 import 'package:my_finance/stores/expense.store.dart';
+import 'package:my_finance/utils/index.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseList extends StatelessWidget {
@@ -54,9 +54,7 @@ class ExpenseList extends StatelessWidget {
           itemBuilder: (context, index) {
             final expense = displayedExpenses[index];
             final category = categoryStore.categories
-                .firstWhere((c) => c.id == expense.categoryId, orElse: () {
-              return Category(id: 0, name: 'Desconhecida', icon: Icons.help);
-            });
+                .firstWhere((c) => c.id == expense.categoryId);
             return Card(
               elevation: 2,
               color: Colors.white,
@@ -64,7 +62,7 @@ class ExpenseList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ListTile(
-                leading: Icon(category.icon),
+                leading: Icon(Utils.iconMap[category.icon]!.icon),
                 title: Text(expense.name),
                 subtitle: Text(DateFormat('dd/MM/yyyy').format(expense.date)),
                 trailing: Text(

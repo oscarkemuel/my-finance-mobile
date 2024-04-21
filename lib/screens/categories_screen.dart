@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart'; // Import MobX's Observer widget
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/stores/category.store.dart';
+import 'package:my_finance/utils/index.dart';
 import 'package:my_finance/widgets/category_form.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class CategoriesScreen extends StatelessWidget {
           },
         );
       },
+      isScrollControlled: true,
     );
   }
 
@@ -113,7 +115,7 @@ class CategoriesScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              child: Icon(category.icon,
+                              child: Icon(Utils.iconMap[category.icon]!.icon,
                                   size: 40, color: Colors.grey[700]),
                             ),
                           );
