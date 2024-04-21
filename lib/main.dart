@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/daos/bank_dao.dart';
 import 'package:my_finance/daos/category_dao.dart';
+import 'package:my_finance/daos/income_dao.dart';
 import 'package:my_finance/database/db.dart';
 import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final bankDao = BankDao(db);
     final categoryDao = CategoryDao(db);
+    final incomeDao = IncomeDao(db);
 
     return MultiProvider(
       providers: [
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
         Provider<CategoryStore>(
           create: (_) => CategoryStore(categoryDao),
         ),
-        Provider<IncomeStore>(create: (_) => IncomeStore()),
+        Provider<IncomeStore>(create: (_) => IncomeStore(incomeDao)),
         Provider<ExpenseStore>(create: (_) => ExpenseStore()),
       ],
       child: MaterialApp(
