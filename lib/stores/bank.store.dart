@@ -24,14 +24,14 @@ abstract class _BankStore with Store {
   }
 
   @action
-  void addBank(Bank bank) async {
+  Future<dynamic> addBank(Bank bank) async {
     banks.add(bank);
     await bankDao.insertBank(bank);
   }
 
 // TODO: On remove bank, set bakId to 0 for all expenses that have the bankId
   @action
-  void removeBank(Bank bank) async {
+  Future<dynamic> removeBank(Bank bank) async {
     final bankIndex = banks.indexWhere((b) => b.id == bank.id);
     banks.removeAt(bankIndex);
     await bankDao.deleteBank(bank.id);

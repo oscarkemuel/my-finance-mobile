@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 
 class DB {
   DB._();
@@ -34,9 +35,26 @@ class DB {
     await db.execute(_category);
     await db.insert('category', {
       'id': 0,
-      'name': 'Desconhecido',
-      'icon': 'unknown',
+      'name': 'Desconhecida',
+      'icon': Icons.help.codePoint,
     });
+    List<Map<String, dynamic>> categories = [
+      {'name': 'Comida', 'icon': Icons.food_bank.codePoint},
+      {'name': 'Transporte', 'icon': Icons.directions_bus.codePoint},
+      {'name': 'Saúde', 'icon': Icons.local_hospital.codePoint},
+      {'name': 'Educação', 'icon': Icons.school.codePoint},
+      {'name': 'Entretenimento', 'icon': Icons.movie.codePoint},
+      {'name': 'Serviços', 'icon': Icons.settings.codePoint},
+      {'name': 'Outros', 'icon': Icons.more_horiz.codePoint},
+    ];
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    for (var category in categories) {
+      await db.insert('category', {
+        'id': timestamp++,
+        'name': category['name'],
+        'icon': category['icon'],
+      });
+    }
 
     await db.execute(_income);
     await db.execute(_expense);
@@ -57,7 +75,7 @@ class DB {
       CREATE TABLE category(
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        icon TEXT NOT NULL
+        icon INTEGER NOT NULL
       )
     ''';
   }

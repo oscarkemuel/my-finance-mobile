@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:my_finance/models/category.dart';
 import 'package:my_finance/models/expense.dart';
 import 'package:intl/intl.dart';
 import 'package:my_finance/stores/category.store.dart';
@@ -54,7 +55,7 @@ class ExpenseList extends StatelessWidget {
             final expense = displayedExpenses[index];
             final category = categoryStore.categories
                 .firstWhere((c) => c.id == expense.categoryId, orElse: () {
-              return categoryStore.categories.first;
+              return Category(id: 0, name: 'Desconhecida', icon: Icons.help);
             });
             return Card(
               elevation: 2,
