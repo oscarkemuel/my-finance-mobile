@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/stores/expense.store.dart';
 import 'package:my_finance/stores/income.store.dart';
@@ -46,9 +47,18 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: netBalance >= 0
-                              ? Colors.green[100]
-                              : Colors.red[100],
+                              ? Colors.green[200]
+                              : Colors.red[200],
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(width: 0.2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 5.0,
+                              spreadRadius: 0.5,
+                              offset: Offset(1, 1),
+                            ),
+                          ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,8 +81,17 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.green[100],
+                        color: Colors.blue[200],
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 0.2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5.0,
+                            spreadRadius: 0.5,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -99,9 +118,15 @@ class HomeScreen extends StatelessWidget {
                   ? (expenseStore.totalAmount / incomeStore.totalAmount) * 100
                   : 0;
               final roundedExpensePercentage =
-                  double.parse(expensePercentage.toStringAsFixed(2));
+                  double.parse(expensePercentage.toStringAsFixed(2)) < 0
+                      ? 0.0
+                      : double.parse(expensePercentage.toStringAsFixed(2));
               final roundedRemainingPercentage =
-                  double.parse((100 - expensePercentage).toStringAsFixed(2));
+                  double.parse((100 - expensePercentage).toStringAsFixed(2)) < 0
+                      ? 0.0
+                      : double.parse(
+                          (100 - expensePercentage).toStringAsFixed(2));
+
               return SfCircularChart(
                 legend: Legend(
                   isVisible: true,
@@ -112,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                   DoughnutSeries<ChartData, String>(
                     dataSource: [
                       ChartData('Usado', roundedExpensePercentage),
-                      ChartData('Receita total', roundedRemainingPercentage),
+                      ChartData('Restante', roundedRemainingPercentage),
                     ],
                     xValueMapper: (ChartData data, _) => data.category,
                     yValueMapper: (ChartData data, _) => data.value,
@@ -120,11 +145,18 @@ class HomeScreen extends StatelessWidget {
                     dataLabelSettings: const DataLabelSettings(
                       isVisible: true,
                       labelPosition: ChartDataLabelPosition.inside,
-                      textStyle: TextStyle(color: Colors.white, fontSize: 11),
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
                     ),
                     enableTooltip: true,
                     radius: '85%',
                     innerRadius: '50%',
+                    pointColorMapper: (ChartData data, _) =>
+                        data.category == 'Usado'
+                            ? Colors.red[300]
+                            : Colors.green[300],
                   ),
                 ],
               );
