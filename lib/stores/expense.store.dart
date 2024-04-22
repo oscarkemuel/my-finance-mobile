@@ -39,6 +39,16 @@ abstract class _ExpenseStore with Store {
     await expenseDao.deleteExpense(expense.id);
   }
 
+  Future<void> updateExpenseByExcludedCategory(int categoryId) async {
+    await expenseDao.updateExpenseByExcludedCategory(categoryId);
+    await _loadExpenses();
+  }
+
+  Future<void> updateExpenseByExcludedBank(int bankId) async {
+    await expenseDao.updateExpenseByExcludedBank(bankId);
+    await _loadExpenses();
+  }
+
   void _sortExpenses() {
     expenses.sort((a, b) => b.createdDate.compareTo(a.createdDate));
   }

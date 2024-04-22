@@ -33,16 +33,18 @@ class MyApp extends StatelessWidget {
     final incomeDao = IncomeDao(db);
     final expenseDao = ExpenseDao(db);
 
+    final expenseStore = ExpenseStore(expenseDao);
+
     return MultiProvider(
       providers: [
         Provider<BankStore>(
-          create: (_) => BankStore(bankDao),
+          create: (_) => BankStore(bankDao, expenseStore),
         ),
         Provider<CategoryStore>(
-          create: (_) => CategoryStore(categoryDao),
+          create: (_) => CategoryStore(categoryDao, expenseStore),
         ),
         Provider<IncomeStore>(create: (_) => IncomeStore(incomeDao)),
-        Provider<ExpenseStore>(create: (_) => ExpenseStore(expenseDao)),
+        Provider<ExpenseStore>(create: (_) => expenseStore),
       ],
       child: MaterialApp(
         title: 'My finance app',

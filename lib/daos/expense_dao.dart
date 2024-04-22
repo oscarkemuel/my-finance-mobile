@@ -18,4 +18,14 @@ class ExpenseDao {
   Future<void> deleteExpense(int id) async {
     await db.delete('expense', where: 'id = ?', whereArgs: [id]);
   }
+
+  Future<void> updateExpenseByExcludedCategory(int categoryId) async {
+    await db.update('expense', {'category_id': 0},
+        where: 'category_id = ?', whereArgs: [categoryId]);
+  }
+
+  Future<void> updateExpenseByExcludedBank(int bankId) async {
+    await db.update('expense', {'bank_id': 0},
+        where: 'bank_id = ?', whereArgs: [bankId]);
+  }
 }
