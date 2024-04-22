@@ -50,7 +50,6 @@ class HomeScreen extends StatelessWidget {
                               ? Colors.green[200]
                               : Colors.red[200],
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(width: 0.2),
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
@@ -83,7 +82,6 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.blue[200],
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(width: 0.2),
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
