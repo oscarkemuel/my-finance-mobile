@@ -25,29 +25,29 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
-  late final _$_CategoryStoreActionController =
-      ActionController(name: '_CategoryStore', context: context);
+  late final _$_loadCategoriesAsyncAction =
+      AsyncAction('_CategoryStore._loadCategories', context: context);
 
   @override
-  void addCategory(Category category) {
-    final _$actionInfo = _$_CategoryStoreActionController.startAction(
-        name: '_CategoryStore.addCategory');
-    try {
-      return super.addCategory(category);
-    } finally {
-      _$_CategoryStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> _loadCategories() {
+    return _$_loadCategoriesAsyncAction.run(() => super._loadCategories());
   }
 
+  late final _$addCategoryAsyncAction =
+      AsyncAction('_CategoryStore.addCategory', context: context);
+
   @override
-  void removeCategory(Category category) {
-    final _$actionInfo = _$_CategoryStoreActionController.startAction(
-        name: '_CategoryStore.removeCategory');
-    try {
-      return super.removeCategory(category);
-    } finally {
-      _$_CategoryStoreActionController.endAction(_$actionInfo);
-    }
+  Future<dynamic> addCategory(Category category) {
+    return _$addCategoryAsyncAction.run(() => super.addCategory(category));
+  }
+
+  late final _$removeCategoryAsyncAction =
+      AsyncAction('_CategoryStore.removeCategory', context: context);
+
+  @override
+  Future<dynamic> removeCategory(Category category) {
+    return _$removeCategoryAsyncAction
+        .run(() => super.removeCategory(category));
   }
 
   @override

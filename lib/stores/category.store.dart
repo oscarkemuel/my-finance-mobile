@@ -1,34 +1,41 @@
 import 'package:mobx/mobx.dart';
-import 'package:flutter/material.dart';
+import 'package:my_finance/daos/category_dao.dart';
 import 'package:my_finance/models/category.dart';
+import 'package:my_finance/stores/expense.store.dart';
 
 part 'category.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class CategoryStore = _CategoryStore with _$CategoryStore;
 
 abstract class _CategoryStore with Store {
+  final CategoryDao categoryDao;
+  final ExpenseStore expenseStore;
+
   @observable
   ObservableList<Category> categories = ObservableList<Category>();
 
-  _CategoryStore() {
-    categories.add(Category(id: 0, name: 'Desconhecida', icon: Icons.help));
-    categories.add(Category(id: 1, name: 'Comida', icon: Icons.food_bank));
-    categories.add(Category(id: 2, name: 'Transporte', icon: Icons.directions_bus));
-    categories.add(Category(id: 3, name: 'Saúde', icon: Icons.local_hospital));
-    categories.add(Category(id: 4, name: 'Educação', icon: Icons.school));
-    categories.add(Category(id: 5, name: 'Entretenimento', icon: Icons.movie));
-    categories.add(Category(id: 6, name: 'Serviços', icon: Icons.settings));
-    categories.add(Category(id: 7, name: 'Outros', icon: Icons.more_horiz));
+  _CategoryStore(this.categoryDao, this.expenseStore) {
+    _loadCategories();
   }
 
   @action
-  void addCategory(Category category) {
+  Future<void> _loadCategories() async {
+    final categoryList = await categoryDao.getAllCategories();
+    categories = ObservableList<Category>.of(categoryList);
+  }
+
+  @action
+  Future<dynamic> addCategory(Category category) async {
     categories.add(category);
+    await categoryDao.insertCategory(category);
   }
 
-  // TODO: On remove category, set categoryId to 0 for all expenses that have the categoryId
   @action
-  void removeCategory(Category category) {
+  Future<dynamic> removeCategory(Category category) async {
+    await expenseStore.updateExpenseByExcludedCategory(category.id);
+    await categoryDao.deleteCategory(category.id);
+
     final categoryIndex = categories.indexWhere((c) => c.id == category.id);
     categories.removeAt(categoryIndex);
   }

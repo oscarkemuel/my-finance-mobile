@@ -24,29 +24,28 @@ mixin _$BankStore on _BankStore, Store {
     });
   }
 
-  late final _$_BankStoreActionController =
-      ActionController(name: '_BankStore', context: context);
+  late final _$_loadBanksAsyncAction =
+      AsyncAction('_BankStore._loadBanks', context: context);
 
   @override
-  void addBank(Bank bank) {
-    final _$actionInfo =
-        _$_BankStoreActionController.startAction(name: '_BankStore.addBank');
-    try {
-      return super.addBank(bank);
-    } finally {
-      _$_BankStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> _loadBanks() {
+    return _$_loadBanksAsyncAction.run(() => super._loadBanks());
   }
 
+  late final _$addBankAsyncAction =
+      AsyncAction('_BankStore.addBank', context: context);
+
   @override
-  void removeBank(Bank bank) {
-    final _$actionInfo =
-        _$_BankStoreActionController.startAction(name: '_BankStore.removeBank');
-    try {
-      return super.removeBank(bank);
-    } finally {
-      _$_BankStoreActionController.endAction(_$actionInfo);
-    }
+  Future<dynamic> addBank(Bank bank) {
+    return _$addBankAsyncAction.run(() => super.addBank(bank));
+  }
+
+  late final _$removeBankAsyncAction =
+      AsyncAction('_BankStore.removeBank', context: context);
+
+  @override
+  Future<dynamic> removeBank(Bank bank) {
+    return _$removeBankAsyncAction.run(() => super.removeBank(bank));
   }
 
   @override
