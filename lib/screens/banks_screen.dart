@@ -14,13 +14,22 @@ class BanksScreen extends StatelessWidget {
     final bankStore = Provider.of<BankStore>(context, listen: false);
 
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (_) {
-        return BankForm(
-          onSubmit: (bank) {
-            bankStore.addBank(bank);
-            Navigator.of(context).pop();
-          },
+      builder: (BuildContext context) {
+        final double screenHeight = MediaQuery.of(context).size.height;
+        final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        final double height = (screenHeight - keyboardHeight) * 0.7;
+
+        return SizedBox(
+          height:
+              height,
+          child: BankForm(
+            onSubmit: (bank) {
+              bankStore.addBank(bank);
+              Navigator.of(context).pop();
+            },
+          ),
         );
       },
     );

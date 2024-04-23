@@ -42,22 +42,15 @@ class HomeScreen extends StatelessWidget {
                     final netBalance =
                         incomeStore.totalAmount - expenseStore.totalAmount;
 
+                    final colorByNetBalance =
+                        netBalance <= 0 ? Colors.red[600] : Colors.black;
+
                     return Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: netBalance >= 0
-                              ? Colors.green[200]
-                              : Colors.red[200],
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 5.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -68,8 +61,10 @@ class HomeScreen extends StatelessWidget {
                                 NumberFormat.currency(
                                         locale: 'pt_BR', symbol: 'R\$')
                                     .format(netBalance),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold))
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: colorByNetBalance)),
                           ],
                         ),
                       ),
@@ -80,16 +75,8 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.blue[200],
+                        color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5.0,
-                            spreadRadius: 0.5,
-                            offset: Offset(1, 1),
-                          ),
-                        ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                                         locale: 'pt_BR', symbol: 'R\$')
                                     .format(incomeStore.totalAmount),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold));
+                                    fontWeight: FontWeight.bold, fontSize: 16));
                           })
                         ],
                       ),
