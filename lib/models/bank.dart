@@ -13,7 +13,7 @@ class Bank {
     return Bank(
       id: map['id'],
       name: map['name'],
-      balance: map['balance'],
+      balance: map['balance'].toDouble(),
     );
   }
 

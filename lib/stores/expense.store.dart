@@ -26,17 +26,25 @@ abstract class _ExpenseStore with Store {
 
   @action
   Future<void> addExpense(Expense expense) async {
-    expenses.add(expense);
+    if (expenses.any((e) => e.id == expense.id)) {
+      await expenseDao.updateExpense(expense);
+      final index = expenses.indexWhere((e) => e.id == expense.id);
+      if (index != -1) {
+        expenses[index] = expense;
+      }
+    } else {
+      await expenseDao.insertExpense(expense);
+      expenses.add(expense);
+    }
     _sortExpenses();
-    await expenseDao.insertExpense(expense);
   }
 
   @action
   Future<void> removeExpense(Expense expense) async {
     final expenseIndex = expenses.indexWhere((e) => e.id == expense.id);
     expenses.removeAt(expenseIndex);
-    _sortExpenses();
     await expenseDao.deleteExpense(expense.id);
+    _sortExpenses();
   }
 
   Future<void> updateExpenseByExcludedCategory(int categoryId) async {

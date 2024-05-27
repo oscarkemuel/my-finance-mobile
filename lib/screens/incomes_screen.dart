@@ -10,46 +10,21 @@ class IncomesScreen extends StatelessWidget {
     super.key,
   });
 
-  void _openIncomeFormModal(BuildContext context) {
+  void _openIncomeFormModal(BuildContext context, [Income? income]) {
     final incomeStore = Provider.of<IncomeStore>(context, listen: false);
 
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return IncomeForm(
+          income: income,
           onSubmit: (income) {
             incomeStore.addIncome(income);
             Navigator.of(context).pop();
           },
-        );
-      },
-    );
-  }
-
-  void _openModalToDeleteIncome(BuildContext context, Income income) {
-    final incomeStore = Provider.of<IncomeStore>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text('Excluir "${income.name}"'),
-          titleTextStyle: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-          content: const Text('Deseja realmente excluir esta receita?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                incomeStore.removeIncome(income);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-            ),
-          ],
+          onDelete: (income) {
+            incomeStore.removeIncome(income);
+          },
         );
       },
     );
@@ -79,7 +54,7 @@ class IncomesScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IncomeList(
-                onTap: (income) => _openModalToDeleteIncome(context, income),
+                onTap: (income) => _openIncomeFormModal(context, income),
               ),
             ),
           ),

@@ -21,7 +21,7 @@ class Expense {
     return Expense(
       id: map['id'],
       name: map['name'],
-      amount: map['amount'],
+      amount: map['amount'].toDouble(),
       date: DateTime.parse(map['date']),
       createdDate: DateTime.parse(map['created_date']),
       categoryId: map['category_id'],

@@ -18,12 +18,13 @@ class BankList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bankStore = Provider.of<BankStore>(context);
-    
+
     return Observer(builder: (_) {
-      if (bankStore.banks.isEmpty || bankStore.banks.length == 1) {
+      if (bankStore.banks.isEmpty) {
         return const Padding(
           padding: EdgeInsets.all(16),
-          child: Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 16)),
+          child:
+              Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 16)),
         );
       }
 
@@ -34,9 +35,9 @@ class BankList extends StatelessWidget {
           physics: isHome == true
               ? const NeverScrollableScrollPhysics()
               : const AlwaysScrollableScrollPhysics(),
-          itemCount: bankStore.banks.length - 1,
+          itemCount: bankStore.banks.length,
           itemBuilder: (context, index) {
-            final bank = bankStore.banks[index + 1];
+            final bank = bankStore.banks[index];
             return Card(
               elevation: 2,
               color: Colors.deepPurple[50],
@@ -61,10 +62,10 @@ class BankList extends StatelessWidget {
                   ],
                 ),
                 onTap: onTap == null
-                  ? null
-                  : () {
-                      onTap!(bank);
-                    },
+                    ? null
+                    : () {
+                        onTap!(bank);
+                      },
               ),
             );
           },
