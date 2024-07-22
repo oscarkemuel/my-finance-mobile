@@ -4,10 +4,14 @@ import 'package:my_finance/utils/index.dart';
 
 class CategoryForm extends StatefulWidget {
   final void Function(Category category) onSubmit;
+  final void Function(Category category)? onDelete;
+  final Category? category;
 
   const CategoryForm({
     super.key,
     required this.onSubmit,
+    this.onDelete,
+    this.category,
   });
 
   @override
@@ -19,15 +23,27 @@ class _CategoryFormState extends State<CategoryForm> {
   CategoryIdentifier? _selectedIcon;
   final _icons = Utils.iconMap;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.category != null) {
+      _nameController.text = widget.category!.name;
+      _selectedIcon = _icons.entries
+          .firstWhere(
+              (element) => element.value.identifier == widget.category!.icon)
+          .key;
+    }
+  }
+
   void _submit() {
     if (_nameController.text.isEmpty || _selectedIcon == null) {
       return;
     }
 
     final category = Category(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: widget.category?.id ?? DateTime.now().millisecondsSinceEpoch,
       name: _nameController.text,
-      icon: _icons[_selectedIcon]!.identifier
+      icon: _icons[_selectedIcon]!.identifier,
     );
 
     widget.onSubmit(category);
@@ -91,8 +107,25 @@ class _CategoryFormState extends State<CategoryForm> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text('Adicionar Categoria'),
+              child: Text(widget.category == null
+                  ? 'Adicionar Categoria'
+                  : 'Atualizar Categoria'),
             ),
+            if (widget.category != null) ...[
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  if (widget.onDelete != null) {
+                    widget.onDelete!(widget.category!);
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: const Text('Excluir Categoria'),
+              ),
+            ],
           ],
         ),
       ),

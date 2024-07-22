@@ -3,10 +3,14 @@ import 'package:my_finance/models/bank.dart';
 
 class BankForm extends StatefulWidget {
   final void Function(Bank bank) onSubmit;
+  final void Function(Bank bank)? onDelete;
+  final Bank? bank;
 
   const BankForm({
     super.key,
     required this.onSubmit,
+    this.onDelete,
+    this.bank,
   });
 
   @override
@@ -16,6 +20,15 @@ class BankForm extends StatefulWidget {
 class _BankFormState extends State<BankForm> {
   final _nameController = TextEditingController();
   final _balanceController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.bank != null) {
+      _nameController.text = widget.bank!.name;
+      _balanceController.text = widget.bank!.balance.toString();
+    }
+  }
 
   void _submit() {
     final name = _nameController.text;
@@ -28,7 +41,7 @@ class _BankFormState extends State<BankForm> {
     }
 
     final bank = Bank(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: widget.bank?.id ?? DateTime.now().millisecondsSinceEpoch,
       name: name,
       balance: balance,
     );
@@ -66,8 +79,24 @@ class _BankFormState extends State<BankForm> {
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(double.infinity, 50),
             ),
-            child: const Text('Adicionar banco'),
+            child: Text(
+                widget.bank == null ? 'Adicionar banco' : 'Atualizar banco'),
           ),
+          if (widget.bank != null) ...[
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (widget.onDelete != null) {
+                  widget.onDelete!(widget.bank!);
+                }
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: const Text('Excluir banco'),
+            ),
+          ],
         ],
       ),
     );

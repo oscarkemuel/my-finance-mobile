@@ -17,7 +17,7 @@ class IncomeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final incomeStore = Provider.of<IncomeStore>(context, listen: false);
+    final incomeStore = Provider.of<IncomeStore>(context);
 
     return Observer(builder: (_) {
       if (incomeStore.incomes.isEmpty) {

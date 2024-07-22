@@ -16,27 +16,33 @@ abstract class _CategoryStore with Store {
   ObservableList<Category> categories = ObservableList<Category>();
 
   _CategoryStore(this.categoryDao, this.expenseStore) {
-    _loadCategories();
+    loadCategories();
   }
 
   @action
-  Future<void> _loadCategories() async {
+  Future<void> loadCategories() async {
     final categoryList = await categoryDao.getAllCategories();
     categories = ObservableList<Category>.of(categoryList);
   }
 
   @action
-  Future<dynamic> addCategory(Category category) async {
-    categories.add(category);
-    await categoryDao.insertCategory(category);
+  Future<void> addCategory(Category category) async {
+    if (categories.any((c) => c.id == category.id)) {
+      await categoryDao.updateCategory(category);
+      final index = categories.indexWhere((c) => c.id == category.id);
+      if (index != -1) {
+        categories[index] = category;
+      }
+    } else {
+      await categoryDao.insertCategory(category);
+      categories.add(category);
+    }
   }
 
   @action
-  Future<dynamic> removeCategory(Category category) async {
+  Future<void> removeCategory(Category category) async {
     await expenseStore.updateExpenseByExcludedCategory(category.id);
     await categoryDao.deleteCategory(category.id);
-
-    final categoryIndex = categories.indexWhere((c) => c.id == category.id);
-    categories.removeAt(categoryIndex);
+    categories.removeWhere((c) => c.id == category.id);
   }
 }

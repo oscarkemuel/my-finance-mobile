@@ -25,19 +25,19 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
-  late final _$_loadCategoriesAsyncAction =
-      AsyncAction('_CategoryStore._loadCategories', context: context);
+  late final _$loadCategoriesAsyncAction =
+      AsyncAction('_CategoryStore.loadCategories', context: context);
 
   @override
-  Future<void> _loadCategories() {
-    return _$_loadCategoriesAsyncAction.run(() => super._loadCategories());
+  Future<void> loadCategories() {
+    return _$loadCategoriesAsyncAction.run(() => super.loadCategories());
   }
 
   late final _$addCategoryAsyncAction =
       AsyncAction('_CategoryStore.addCategory', context: context);
 
   @override
-  Future<dynamic> addCategory(Category category) {
+  Future<void> addCategory(Category category) {
     return _$addCategoryAsyncAction.run(() => super.addCategory(category));
   }
 
@@ -45,7 +45,7 @@ mixin _$CategoryStore on _CategoryStore, Store {
       AsyncAction('_CategoryStore.removeCategory', context: context);
 
   @override
-  Future<dynamic> removeCategory(Category category) {
+  Future<void> removeCategory(Category category) {
     return _$removeCategoryAsyncAction
         .run(() => super.removeCategory(category));
   }

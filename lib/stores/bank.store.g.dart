@@ -24,12 +24,12 @@ mixin _$BankStore on _BankStore, Store {
     });
   }
 
-  late final _$_loadBanksAsyncAction =
-      AsyncAction('_BankStore._loadBanks', context: context);
+  late final _$loadBanksAsyncAction =
+      AsyncAction('_BankStore.loadBanks', context: context);
 
   @override
-  Future<void> _loadBanks() {
-    return _$_loadBanksAsyncAction.run(() => super._loadBanks());
+  Future<void> loadBanks() {
+    return _$loadBanksAsyncAction.run(() => super.loadBanks());
   }
 
   late final _$addBankAsyncAction =

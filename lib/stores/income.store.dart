@@ -25,8 +25,16 @@ abstract class _IncomeStore with Store {
 
   @action
   Future<dynamic> addIncome(Income income) async {
-    incomes.add(income);
-    await incomeDao.insertIncome(income);
+    if (incomes.any((i) => i.id == income.id)) {
+      await incomeDao.updateIncome(income);
+      final index = incomes.indexWhere((i) => i.id == income.id);
+      if (index != -1) {
+        incomes[index] = income;
+      }
+    } else {
+      await incomeDao.insertIncome(income);
+      incomes.add(income);
+    }
   }
 
   @action

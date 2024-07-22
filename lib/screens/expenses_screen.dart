@@ -21,16 +21,31 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   int? selectedBankId;
   int? selectedCategoryId;
 
-  openExpenseFormModal(BuildContext context) {
+  openExpenseFormModal(BuildContext context, [Expense? expense]) {
     final expenseStore = Provider.of<ExpenseStore>(context, listen: false);
+    final bankStore = Provider.of<BankStore>(context, listen: false);
+    final categoryStore = Provider.of<CategoryStore>(context, listen: false);
+
+    // Ensure that banks and categories are loaded before opening the form
+    if (bankStore.banks.isEmpty) {
+      bankStore.loadBanks();
+    }
+
+    if (categoryStore.categories.isEmpty) {
+      categoryStore.loadCategories();
+    }
 
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return ExpenseForm(
+          expense: expense,
           onSubmit: (expense) {
             expenseStore.addExpense(expense);
             Navigator.of(context).pop();
+          },
+          onDelete: (expense) {
+            expenseStore.removeExpense(expense);
           },
         );
       },
@@ -174,8 +189,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 return ExpenseList(
                   isHome: true,
                   expenses: filteredExpenses,
-                  onTap: (expense) =>
-                      openModalToDeleteExpense(context, expense),
+                  onTap: (expense) => openExpenseFormModal(context, expense),
                 );
               }),
             ],
