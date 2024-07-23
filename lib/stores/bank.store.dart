@@ -27,7 +27,8 @@ abstract class _BankStore with Store {
 
   @action
   Future<dynamic> addBank(Bank bank) async {
-    if (bank.id == DateTime.now().millisecondsSinceEpoch) {
+    final hasBank = banks.any((b) => b.id == bank.id);
+    if (!hasBank) {
       await bankDao.insertBank(bank);
       banks.add(bank);
     } else {

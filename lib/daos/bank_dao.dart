@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_finance/models/bank.dart';
 
 class BankDao {
-  final String apiUrl = 'http://localhost:3000/banks';
+  final String apiUrl = 'https://my-finance-api.fly.dev/banks';
 
   Future<List<Bank>> getAllBanks() async {
     final response = await http.get(Uri.parse(apiUrl));

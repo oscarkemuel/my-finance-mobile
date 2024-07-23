@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_finance/models/category.dart';
 
 class CategoryDao {
-  final String apiUrl = 'http://localhost:3000/categories';
+  final String apiUrl = 'https://my-finance-api.fly.dev/categories';
 
   Future<List<Category>> getAllCategories() async {
     final response = await http.get(Uri.parse(apiUrl));
