@@ -48,11 +48,33 @@ class _AuthCheckState extends State<AuthCheck> {
         builder: (context, failed, _) {
           if (failed) {
             return Center(
-                child: ElevatedButton(
-              onPressed: () {
-                checkLocalAuth();
-              },
-              child: const Text('Tentar novamente'),
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const Icon(
+                  Icons.error,
+                  color: Colors.white,
+                  size: 80,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Conexão falhou. Certifique-se de que o sensor de impressão digital está funcionando corretamente.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Try again
+                    checkLocalAuth();
+                  },
+                  child: const Text('Tentar novamente'),
+                ),
+              ],
             ));
           }
           return Center(
