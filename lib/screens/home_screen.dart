@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/stores/expense.store.dart';
 import 'package:my_finance/stores/income.store.dart';
-import 'package:my_finance/widgets/bank_list.dart';
+import 'package:my_finance/widgets/billet_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +16,10 @@ class HomeScreen extends StatelessWidget {
 
   void _navigateAndDisplayExpenses(BuildContext context) async {
     await Navigator.pushNamed(context, AppRoutes.EXPENSES);
+  }
+
+  void _navigateAndDisplayBillets(BuildContext context) async {
+    await Navigator.pushNamed(context, AppRoutes.BILLETS);
   }
 
   @override
@@ -165,15 +168,22 @@ class HomeScreen extends StatelessWidget {
               isHome: true,
             ),
             const SizedBox(height: 20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Bancos',
+                const Text('Últimos boletos',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ElevatedButton(
+                  onPressed: () => _navigateAndDisplayBillets(context),
+                  child: const Text('Gerenciar'),
+                ),
               ],
             ),
-            const BankList(isHome: true),
+            const BilletList(
+              isHome: true,
+            ),
           ],
         ),
       ),

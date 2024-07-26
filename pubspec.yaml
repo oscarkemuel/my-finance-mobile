@@ -40,6 +40,9 @@ dependencies:
   path: ^1.9.0
   http: ^1.2.1
   local_auth: ^2.2.0
+  flutter_barcode_scanner:
+    git:
+      url: https://github.com/itsAyyazdev/flutter_barcode_scanner.git
 
 dev_dependencies:
   flutter_test:
