@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 enum CategoryIdentifier {
   unknown,
@@ -88,8 +89,14 @@ class Utils {
 
   static CategoryIdentifier stringToCategoryIdentifier(String key) {
     return CategoryIdentifier.values.firstWhere(
-      (e) => e.toString().split('.').last == key,
-      orElse: () => CategoryIdentifier.unknown // Fallback seguro
-    );
+        (e) => e.toString().split('.').last == key,
+        orElse: () => CategoryIdentifier.unknown // Fallback seguro
+        );
   }
+}
+
+Future<bool> isConnected() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  return connectivityResult != ConnectivityResult.none;
 }

@@ -43,6 +43,7 @@ dependencies:
   flutter_barcode_scanner:
     git:
       url: https://github.com/itsAyyazdev/flutter_barcode_scanner.git
+  connectivity_plus: ^2.3.8
 
 dev_dependencies:
   flutter_test:
