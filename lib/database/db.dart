@@ -6,62 +6,39 @@ class DB {
 
   static final DB instance = DB._();
 
-  static  Database? _database;
+  static Database? _database;
 
-  get database async {
-    if (_database != null) return _database;
+  Future<Database> get database async {
+    if (_database != null) return _database!;
 
-    return await _initDatabase();
+    _database = await _initDatabase();
+    return _database!;
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
+    final path = join(await getDatabasesPath(), 'my_finance.db');
+    // await deleteDatabase(path);
     return await openDatabase(
-      join(await getDatabasesPath(), 'my_finance.db'),
+      path,
       version: 1,
       onCreate: _onCreate,
     );
-    // return await deleteDatabase(join(await getDatabasesPath(), 'my_finance.db'));
   }
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(_bank);
-    await db.insert('bank', {
-      'id': 0,
-      'name': 'Desconhecido',
-      'balance': 0,
-    });
-
     await db.execute(_category);
-    await db.insert('category', {
-      'id': 0,
-      'name': 'Desconhecida',
-      'icon': 'unknown',
-    });
-    List<Map<String, dynamic>> categories = [
-      {'name': 'Comida', 'icon': 'food'},
-      {'name': 'Transporte', 'icon': 'transport'},
-      {'name': 'Saúde', 'icon': 'health'},
-      {'name': 'Educação', 'icon': 'education'},
-      {'name': 'Entretenimento', 'icon': 'entertainment'},
-      {'name': 'Serviços', 'icon': 'services'},
-      {'name': 'Outros', 'icon': 'others'},
-    ];
-    var timestamp = DateTime.now().millisecondsSinceEpoch;
-    for (var category in categories) {
-      await db.insert('category', {
-        'id': timestamp++,
-        'name': category['name'],
-        'icon': category['icon'],
-      });
-    }
-
     await db.execute(_income);
     await db.execute(_expense);
+    await db.execute(_billet);
+    // final tables =
+    //     await db.rawQuery('SELECT name FROM sqlite_master WHERE type="table"');
+    // print('Tables: $tables');
   }
 
   String get _bank {
     return '''
-      CREATE TABLE bank(
+      CREATE TABLE banks(
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         balance REAL NOT NULL DEFAULT 0
@@ -71,17 +48,17 @@ class DB {
 
   String get _category {
     return '''
-      CREATE TABLE category(
+      CREATE TABLE categories(
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        icon STRING NOT NULL
+        icon TEXT NOT NULL
       )
     ''';
   }
 
   String get _income {
     return '''
-      CREATE TABLE income(
+      CREATE TABLE incomes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         amount REAL NOT NULL,
@@ -92,7 +69,7 @@ class DB {
 
   String get _expense {
     return '''
-      CREATE TABLE expense(
+      CREATE TABLE expenses(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         amount REAL NOT NULL,
@@ -102,6 +79,19 @@ class DB {
         bank_id INTEGER NOT NULL,
         FOREIGN KEY (category_id) REFERENCES category (id),
         FOREIGN KEY (bank_id) REFERENCES bank (id)
+      )
+    ''';
+  }
+
+  String get _billet {
+    return '''
+      CREATE TABLE billets(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT NOT NULL,
+        amount REAL NOT NULL,
+        dueDate TEXT NOT NULL,
+        company TEXT NOT NULL,
+        description TEXT NOT NULL
       )
     ''';
   }
