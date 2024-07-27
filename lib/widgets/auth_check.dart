@@ -35,6 +35,8 @@ class _AuthCheckState extends State<AuthCheck> {
         Navigator.of(context).pushReplacementNamed(
           AppRoutes.DEFAULT,
         );
+
+        Navigator.of(context).pop();
       }
     }
   }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:my_finance/daos/bank_dao.dart';
+import 'package:my_finance/daos/billet_dao.dart';
 import 'package:my_finance/daos/category_dao.dart';
 import 'package:my_finance/daos/expense_dao.dart';
 import 'package:my_finance/daos/income_dao.dart';
+import 'package:my_finance/screens/billets_screen.dart';
 // import 'package:my_finance/database/db.dart';
 import 'package:my_finance/screens/expenses_screen.dart';
 import 'package:my_finance/screens/home_screen.dart';
 import 'package:my_finance/screens/tabs_screen.dart';
 import 'package:my_finance/services/local_auth_service.dart';
 import 'package:my_finance/stores/bank.store.dart';
+import 'package:my_finance/stores/billet.store.dart';
 import 'package:my_finance/stores/category.store.dart';
 import 'package:my_finance/stores/expense.store.dart';
 import 'package:my_finance/stores/income.store.dart';
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
     final categoryDao = CategoryDao();
     final incomeDao = IncomeDao();
     final expenseDao = ExpenseDao();
+    final billetDao = BilletDao();
 
     final expenseStore = ExpenseStore(expenseDao);
 
@@ -49,6 +53,7 @@ class MyApp extends StatelessWidget {
         ),
         Provider<IncomeStore>(create: (_) => IncomeStore(incomeDao)),
         Provider<ExpenseStore>(create: (_) => expenseStore),
+        Provider<BilletStore>(create: (_) => BilletStore(billetDao)),
       ],
       child: MaterialApp(
         title: 'My finance app',
@@ -58,6 +63,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.DEFAULT: (ctx) => const TabsScreen(),
           AppRoutes.HOME: (ctx) => const HomeScreen(),
           AppRoutes.EXPENSES: (ctx) => const ExpensesScreen(),
+          AppRoutes.BILLETS: (ctx) => const BilletsScreen(),
         },
       ),
     );

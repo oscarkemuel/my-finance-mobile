@@ -8,4 +8,5 @@ class AppRoutes {
   static const INCOMES = '/incomes';
   static const BANKS = '/banks';
   static const CATEGORIES = '/categories';
+  static const BILLETS = '/billets';
 }
