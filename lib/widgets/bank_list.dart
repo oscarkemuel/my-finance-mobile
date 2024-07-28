@@ -21,10 +21,9 @@ class BankList extends StatelessWidget {
 
     return Observer(builder: (_) {
       if (bankStore.banks.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text("Nenhum banco cadastrado.",
-              style: TextStyle(fontSize: 16, color: Colors.white)),
+        return const Center(
+          child:
+              Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 18)),
         );
       }
 

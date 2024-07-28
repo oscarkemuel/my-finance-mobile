@@ -21,12 +21,9 @@ class IncomeList extends StatelessWidget {
 
     return Observer(builder: (_) {
       if (incomeStore.incomes.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            "Nenhuma receita cadastrada.",
-            style: TextStyle(fontSize: 16, color: Colors.white),
-          ),
+        return const Center(
+          child: Text("Nenhuma receita cadastrada.",
+              style: TextStyle(fontSize: 18)),
         );
       }
 

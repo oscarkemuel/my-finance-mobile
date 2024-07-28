@@ -21,10 +21,9 @@ class BilletList extends StatelessWidget {
 
     return Observer(builder: (_) {
       if (billetStore.billets.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
+        return const Center(
           child:
-              Text("Nenhum boleto cadastrado.", style: TextStyle(fontSize: 16)),
+              Text("Nenhum boleto cadastrado.", style: TextStyle(fontSize: 18)),
         );
       }
 

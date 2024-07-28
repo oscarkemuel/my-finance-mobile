@@ -110,8 +110,8 @@ class _CategoryFormState extends State<CategoryForm> {
               ),
               child: Text(
                   widget.category == null
-                      ? 'Adicionar Categoria'
-                      : 'Atualizar Categoria',
+                      ? 'Adicionar categoria'
+                      : 'Atualizar categoria',
                   style: const TextStyle(color: Colors.white)),
             ),
             if (widget.category != null) ...[
