@@ -42,6 +42,12 @@ abstract class _BankStore with Store {
 
   @action
   Future<dynamic> removeBank(Bank bank) async {
+    final hasDependency = expenseStore.hasDependencyOfBank(bank.id);
+
+    if (hasDependency) {
+      return;
+    }
+
     await expenseStore.updateExpenseByExcludedBank(bank.id);
     await bankDao.deleteBank(bank.id);
 

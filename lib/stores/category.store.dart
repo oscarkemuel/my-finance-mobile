@@ -41,6 +41,12 @@ abstract class _CategoryStore with Store {
 
   @action
   Future<void> removeCategory(Category category) async {
+    final hasDependency = expenseStore.hasDependencyOfCategory(category.id);
+
+    if (hasDependency) {
+      return;
+    }
+
     await expenseStore.updateExpenseByExcludedCategory(category.id);
     await categoryDao.deleteCategory(category.id);
     categories.removeWhere((c) => c.id == category.id);

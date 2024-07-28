@@ -57,6 +57,14 @@ abstract class _ExpenseStore with Store {
     await _loadExpenses();
   }
 
+  hasDependencyOfBank(int bankId) {
+    return expenses.any((e) => e.bankId == bankId);
+  }
+
+  hasDependencyOfCategory(int categoryId) {
+    return expenses.any((e) => e.categoryId == categoryId);
+  }
+
   void _sortExpenses() {
     expenses.sort((a, b) => b.createdDate.compareTo(a.createdDate));
   }
