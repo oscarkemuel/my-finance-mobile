@@ -78,9 +78,11 @@ class _BankFormState extends State<BankForm> {
             onPressed: () => _submit(),
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(double.infinity, 50),
+              backgroundColor: Colors.green,
             ),
             child: Text(
-                widget.bank == null ? 'Adicionar banco' : 'Atualizar banco'),
+                widget.bank == null ? 'Adicionar banco' : 'Atualizar banco',
+                style: const TextStyle(color: Colors.white)),
           ),
           if (widget.bank != null) ...[
             const SizedBox(height: 10),
@@ -93,8 +95,10 @@ class _BankFormState extends State<BankForm> {
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.red,
               ),
-              child: const Text('Excluir banco'),
+              child: const Text('Excluir banco',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ],

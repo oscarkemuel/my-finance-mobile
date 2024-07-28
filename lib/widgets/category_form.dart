@@ -106,10 +106,13 @@ class _CategoryFormState extends State<CategoryForm> {
               onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.green,
               ),
-              child: Text(widget.category == null
-                  ? 'Adicionar Categoria'
-                  : 'Atualizar Categoria'),
+              child: Text(
+                  widget.category == null
+                      ? 'Adicionar Categoria'
+                      : 'Atualizar Categoria',
+                  style: const TextStyle(color: Colors.white)),
             ),
             if (widget.category != null) ...[
               const SizedBox(height: 10),
@@ -122,8 +125,10 @@ class _CategoryFormState extends State<CategoryForm> {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.red,
                 ),
-                child: const Text('Excluir Categoria'),
+                child: const Text('Excluir Categoria',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ],

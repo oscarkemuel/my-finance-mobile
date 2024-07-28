@@ -107,10 +107,13 @@ class _IncomeFormState extends State<IncomeForm> {
               onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.green,
               ),
-              child: Text(widget.income == null
-                  ? 'Adicionar receita'
-                  : 'Atualizar receita'),
+              child: Text(
+                  widget.income == null
+                      ? 'Adicionar receita'
+                      : 'Atualizar receita',
+                  style: const TextStyle(color: Colors.white)),
             ),
             if (widget.income != null) ...[
               const SizedBox(height: 10),
@@ -123,8 +126,10 @@ class _IncomeFormState extends State<IncomeForm> {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.red,
                 ),
-                child: const Text('Excluir receita'),
+                child: const Text('Excluir receita',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ],

@@ -175,10 +175,13 @@ class _BilletFormState extends State<BilletForm> {
               onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.green,
               ),
-              child: Text(widget.billet == null
-                  ? 'Adicionar boleto'
-                  : 'Atualizar boleto'),
+              child: Text(
+                  widget.billet == null
+                      ? 'Adicionar boleto'
+                      : 'Atualizar boleto',
+                  style: const TextStyle(color: Colors.white)),
             ),
             if (widget.billet != null) ...[
               const SizedBox(height: 10),
@@ -191,8 +194,10 @@ class _BilletFormState extends State<BilletForm> {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.red,
                 ),
-                child: const Text('Excluir boleto'),
+                child: const Text('Excluir boleto',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ],
