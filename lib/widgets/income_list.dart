@@ -17,14 +17,13 @@ class IncomeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final incomeStore = Provider.of<IncomeStore>(context, listen: false);
+    final incomeStore = Provider.of<IncomeStore>(context);
 
     return Observer(builder: (_) {
       if (incomeStore.incomes.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
+        return const Center(
           child: Text("Nenhuma receita cadastrada.",
-              style: TextStyle(fontSize: 16)),
+              style: TextStyle(fontSize: 18)),
         );
       }
 
@@ -38,30 +37,64 @@ class IncomeList extends StatelessWidget {
           itemCount: incomeStore.incomes.length,
           itemBuilder: (context, index) {
             final income = incomeStore.incomes[index];
-            return Card(
-              elevation: 2,
-              color: Colors.green[100],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ListTile(
-                title: Text(income.name),
-                titleTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+            return GestureDetector(
+              onTap: onTap != null ? () => onTap!(income) : null,
+              child: Card(
+                elevation: 4,
+                color: Colors.teal[700],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                          .format(income.amount),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(DateFormat('dd/MM/yyyy').format(income.date)),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.attach_money,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              income.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              NumberFormat.currency(
+                                      locale: 'pt_BR', symbol: 'R\$')
+                                  .format(income.amount),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(income.date),
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                onTap: onTap != null ? () => onTap!(income) : null,
               ),
             );
           },

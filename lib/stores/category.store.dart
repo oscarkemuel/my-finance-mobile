@@ -1,35 +1,54 @@
 import 'package:mobx/mobx.dart';
-import 'package:flutter/material.dart';
+import 'package:my_finance/daos/category_dao.dart';
 import 'package:my_finance/models/category.dart';
+import 'package:my_finance/stores/expense.store.dart';
 
 part 'category.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class CategoryStore = _CategoryStore with _$CategoryStore;
 
 abstract class _CategoryStore with Store {
+  final CategoryDao categoryDao;
+  final ExpenseStore expenseStore;
+
   @observable
   ObservableList<Category> categories = ObservableList<Category>();
 
-  _CategoryStore() {
-    categories.add(Category(id: 0, name: 'Desconhecida', icon: Icons.help));
-    categories.add(Category(id: 1, name: 'Comida', icon: Icons.food_bank));
-    categories.add(Category(id: 2, name: 'Transporte', icon: Icons.directions_bus));
-    categories.add(Category(id: 3, name: 'Saúde', icon: Icons.local_hospital));
-    categories.add(Category(id: 4, name: 'Educação', icon: Icons.school));
-    categories.add(Category(id: 5, name: 'Entretenimento', icon: Icons.movie));
-    categories.add(Category(id: 6, name: 'Serviços', icon: Icons.settings));
-    categories.add(Category(id: 7, name: 'Outros', icon: Icons.more_horiz));
+  _CategoryStore(this.categoryDao, this.expenseStore) {
+    loadCategories();
   }
 
   @action
-  void addCategory(Category category) {
-    categories.add(category);
+  Future<void> loadCategories() async {
+    final categoryList = await categoryDao.getAllCategories();
+    categories = ObservableList<Category>.of(categoryList);
   }
 
-  // TODO: On remove category, set categoryId to 0 for all expenses that have the categoryId
   @action
-  void removeCategory(Category category) {
-    final categoryIndex = categories.indexWhere((c) => c.id == category.id);
-    categories.removeAt(categoryIndex);
+  Future<void> addCategory(Category category) async {
+    if (categories.any((c) => c.id == category.id)) {
+      await categoryDao.updateCategory(category);
+      final index = categories.indexWhere((c) => c.id == category.id);
+      if (index != -1) {
+        categories[index] = category;
+      }
+    } else {
+      await categoryDao.insertCategory(category);
+      categories.add(category);
+    }
+  }
+
+  @action
+  Future<void> removeCategory(Category category) async {
+    final hasDependency = expenseStore.hasDependencyOfCategory(category.id);
+
+    if (hasDependency) {
+      return;
+    }
+
+    await expenseStore.updateExpenseByExcludedCategory(category.id);
+    await categoryDao.deleteCategory(category.id);
+    categories.removeWhere((c) => c.id == category.id);
   }
 }

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:my_finance/models/category.dart';
+import 'package:my_finance/utils/index.dart';
 
 class CategoryForm extends StatefulWidget {
   final void Function(Category category) onSubmit;
+  final void Function(Category category)? onDelete;
+  final Category? category;
 
   const CategoryForm({
     super.key,
     required this.onSubmit,
+    this.onDelete,
+    this.category,
   });
 
   @override
@@ -15,22 +20,20 @@ class CategoryForm extends StatefulWidget {
 
 class _CategoryFormState extends State<CategoryForm> {
   final _nameController = TextEditingController();
-  IconData? _selectedIcon;
+  CategoryIdentifier? _selectedIcon;
+  final _icons = Utils.iconMap;
 
-  final List<IconData> _icons = [
-    Icons.home,
-    Icons.fastfood,
-    Icons.movie,
-    Icons.shopping_cart,
-    Icons.flight,
-    Icons.fitness_center,
-    Icons.pets,
-    Icons.settings,
-    Icons.school,
-    Icons.local_hospital,
-    Icons.directions_bus,
-    Icons.more_horiz,
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.category != null) {
+      _nameController.text = widget.category!.name;
+      _selectedIcon = _icons.entries
+          .firstWhere(
+              (element) => element.value.identifier == widget.category!.icon)
+          .key;
+    }
+  }
 
   void _submit() {
     if (_nameController.text.isEmpty || _selectedIcon == null) {
@@ -38,9 +41,9 @@ class _CategoryFormState extends State<CategoryForm> {
     }
 
     final category = Category(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: widget.category?.id ?? DateTime.now().millisecondsSinceEpoch,
       name: _nameController.text,
-      icon: _selectedIcon!,
+      icon: _icons[_selectedIcon]!.identifier,
     );
 
     widget.onSubmit(category);
@@ -73,15 +76,17 @@ class _CategoryFormState extends State<CategoryForm> {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
+                CategoryIdentifier key = _icons.keys.elementAt(index);
+                CategoryIcon value = _icons[key]!;
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedIcon = _icons[index];
+                      _selectedIcon = key;
                     });
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: _selectedIcon == _icons[index]
+                      border: _selectedIcon == key
                           ? Border.all(
                               color: Theme.of(context).primaryColor, width: 2)
                           : null,
@@ -89,7 +94,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       color: Colors.grey[300],
                     ),
                     child: Icon(
-                      _icons[index],
+                      value.icon,
                       size: 40,
                     ),
                   ),
@@ -101,9 +106,31 @@ class _CategoryFormState extends State<CategoryForm> {
               onPressed: _submit,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.green,
               ),
-              child: const Text('Adicionar Categoria'),
+              child: Text(
+                  widget.category == null
+                      ? 'Adicionar categoria'
+                      : 'Atualizar categoria',
+                  style: const TextStyle(color: Colors.white)),
             ),
+            if (widget.category != null) ...[
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  if (widget.onDelete != null) {
+                    widget.onDelete!(widget.category!);
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.red,
+                ),
+                child: const Text('Excluir Categoria',
+                    style: TextStyle(color: Colors.white)),
+              ),
+            ],
           ],
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/stores/expense.store.dart';
 import 'package:my_finance/stores/income.store.dart';
-import 'package:my_finance/widgets/bank_list.dart';
+import 'package:my_finance/widgets/billet_list.dart';
 import 'package:my_finance/widgets/expense_list.dart';
 import 'package:my_finance/utils/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +16,10 @@ class HomeScreen extends StatelessWidget {
 
   void _navigateAndDisplayExpenses(BuildContext context) async {
     await Navigator.pushNamed(context, AppRoutes.EXPENSES);
+  }
+
+  void _navigateAndDisplayBillets(BuildContext context) async {
+    await Navigator.pushNamed(context, AppRoutes.BILLETS);
   }
 
   @override
@@ -41,13 +45,14 @@ class HomeScreen extends StatelessWidget {
                     final netBalance =
                         incomeStore.totalAmount - expenseStore.totalAmount;
 
+                    final colorByNetBalance =
+                        netBalance <= 0 ? Colors.red[600] : Colors.black;
+
                     return Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: netBalance >= 0
-                              ? Colors.green[100]
-                              : Colors.red[100],
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
@@ -59,8 +64,10 @@ class HomeScreen extends StatelessWidget {
                                 NumberFormat.currency(
                                         locale: 'pt_BR', symbol: 'R\$')
                                     .format(netBalance),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold))
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: colorByNetBalance)),
                           ],
                         ),
                       ),
@@ -71,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.green[100],
+                        color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
@@ -85,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                                         locale: 'pt_BR', symbol: 'R\$')
                                     .format(incomeStore.totalAmount),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold));
+                                    fontWeight: FontWeight.bold, fontSize: 16));
                           })
                         ],
                       ),
@@ -99,9 +106,15 @@ class HomeScreen extends StatelessWidget {
                   ? (expenseStore.totalAmount / incomeStore.totalAmount) * 100
                   : 0;
               final roundedExpensePercentage =
-                  double.parse(expensePercentage.toStringAsFixed(2));
+                  double.parse(expensePercentage.toStringAsFixed(2)) < 0
+                      ? 0.0
+                      : double.parse(expensePercentage.toStringAsFixed(2));
               final roundedRemainingPercentage =
-                  double.parse((100 - expensePercentage).toStringAsFixed(2));
+                  double.parse((100 - expensePercentage).toStringAsFixed(2)) < 0
+                      ? 0.0
+                      : double.parse(
+                          (100 - expensePercentage).toStringAsFixed(2));
+
               return SfCircularChart(
                 legend: Legend(
                   isVisible: true,
@@ -112,7 +125,7 @@ class HomeScreen extends StatelessWidget {
                   DoughnutSeries<ChartData, String>(
                     dataSource: [
                       ChartData('Usado', roundedExpensePercentage),
-                      ChartData('Receita total', roundedRemainingPercentage),
+                      ChartData('Restante', roundedRemainingPercentage),
                     ],
                     xValueMapper: (ChartData data, _) => data.category,
                     yValueMapper: (ChartData data, _) => data.value,
@@ -120,11 +133,18 @@ class HomeScreen extends StatelessWidget {
                     dataLabelSettings: const DataLabelSettings(
                       isVisible: true,
                       labelPosition: ChartDataLabelPosition.inside,
-                      textStyle: TextStyle(color: Colors.white, fontSize: 11),
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
                     ),
                     enableTooltip: true,
                     radius: '85%',
                     innerRadius: '50%',
+                    pointColorMapper: (ChartData data, _) =>
+                        data.category == 'Usado'
+                            ? Colors.red[300]
+                            : Colors.green[300],
                   ),
                 ],
               );
@@ -148,15 +168,22 @@ class HomeScreen extends StatelessWidget {
               isHome: true,
             ),
             const SizedBox(height: 20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Bancos',
+                const Text('Últimos boletos',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ElevatedButton(
+                  onPressed: () => _navigateAndDisplayBillets(context),
+                  child: const Text('Gerenciar'),
+                ),
               ],
             ),
-            const BankList(isHome: true),
+            const BilletList(
+              isHome: true,
+            ),
           ],
         ),
       ),

@@ -10,4 +10,22 @@ class Income {
     required this.amount,
     required this.date,
   });
+
+  factory Income.fromMap(Map<String, dynamic> map) {
+    return Income(
+      id: map['id'],
+      name: map['name'],
+      amount: map['amount'].toDouble(),
+      date: DateTime.parse(map['date']),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'amount': amount,
+      'date': date.toIso8601String(),
+    };
+  }
 }

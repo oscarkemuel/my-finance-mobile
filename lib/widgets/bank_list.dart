@@ -18,12 +18,12 @@ class BankList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bankStore = Provider.of<BankStore>(context);
-    
+
     return Observer(builder: (_) {
-      if (bankStore.banks.isEmpty || bankStore.banks.length == 1) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 16)),
+      if (bankStore.banks.isEmpty) {
+        return const Center(
+          child:
+              Text("Nenhum banco cadastrado.", style: TextStyle(fontSize: 18)),
         );
       }
 
@@ -34,37 +34,68 @@ class BankList extends StatelessWidget {
           physics: isHome == true
               ? const NeverScrollableScrollPhysics()
               : const AlwaysScrollableScrollPhysics(),
-          itemCount: bankStore.banks.length - 1,
+          itemCount: bankStore.banks.length,
           itemBuilder: (context, index) {
-            final bank = bankStore.banks[index + 1];
-            return Card(
-              elevation: 2,
-              color: Colors.deepPurple[50],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ListTile(
-                title: Text(bank.name),
-                titleTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+            final bank = bankStore.banks[index];
+            return GestureDetector(
+              onTap: onTap == null ? null : () => onTap!(bank),
+              child: Card(
+                elevation: 4,
+                color: Colors.grey[700],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Crédito'),
-                    const SizedBox(width: 8),
-                    Text(
-                      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$')
-                          .format(bank.balance),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.credit_card,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            '**** **** **** ****',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            bank.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            NumberFormat.currency(
+                                    locale: 'pt_BR', symbol: 'R\$')
+                                .format(bank.balance),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                onTap: onTap == null
-                  ? null
-                  : () {
-                      onTap!(bank);
-                    },
               ),
             );
           },

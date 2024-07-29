@@ -36,6 +36,14 @@ dependencies:
   mobx: ^2.3.3+2
   flutter_mobx: ^2.2.1+1
   provider: ^6.1.2
+  sqflite: ^2.3.3
+  path: ^1.9.0
+  http: ^1.2.1
+  local_auth: ^2.2.0
+  flutter_barcode_scanner:
+    git:
+      url: https://github.com/itsAyyazdev/flutter_barcode_scanner.git
+  connectivity_plus: ^2.3.8
 
 dev_dependencies:
   flutter_test:

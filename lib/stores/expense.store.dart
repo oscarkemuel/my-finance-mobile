@@ -1,114 +1,72 @@
 import 'package:mobx/mobx.dart';
+import 'package:my_finance/daos/expense_dao.dart';
 import 'package:my_finance/models/expense.dart';
 
 part 'expense.store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class ExpenseStore = _ExpenseStore with _$ExpenseStore;
 
 abstract class _ExpenseStore with Store {
+  final ExpenseDao expenseDao;
+
   @observable
   ObservableList<Expense> expenses = ObservableList<Expense>();
 
-  _ExpenseStore() {
-    expenses.add(Expense(
-      id: 2,
-      name: 'Academia',
-      amount: 130,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 3,
-      bankId: 1,
-    ));
+  _ExpenseStore(this.expenseDao) {
+    _loadExpenses();
+  }
 
-    expenses.add(Expense(
-      id: 3,
-      name: 'Internet',
-      amount: 106,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 6,
-      bankId: 2,
-    ));
-
-    expenses.add(Expense(
-      id: 8,
-      name: 'Uber/99',
-      amount: 250,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 2,
-      bankId: 1,
-    ));
-
-    expenses.add(Expense(
-      id: 4,
-      name: 'Recarga celular',
-      amount: 25,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 6,
-      bankId: 2,
-    ));
-
-    expenses.add(Expense(
-      id: 5,
-      name: 'Amazon Prime',
-      amount: 15,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 5,
-      bankId: 1,
-    ));
-
-    expenses.add(Expense(
-      id: 6,
-      name: 'Spotify',
-      amount: 12,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 5,
-      bankId: 2,
-    ));
-
-    expenses.add(Expense(
-      id: 7,
-      name: 'Google Storage',
-      amount: 8,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 6,
-      bankId: 1,
-    ));
-
-    expenses.add(Expense(
-      id: 9,
-      name: 'Netflix',
-      amount: 45,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 5,
-      bankId: 2,
-    ));
-
-    expenses.add(Expense(
-      id: 1,
-      name: 'CDB',
-      amount: 1250,
-      date: DateTime.parse('2024-01-10'),
-      categoryId: 7,
-      bankId: 1,
-    ));
-
+  @action
+  Future<void> _loadExpenses() async {
+    final expenseList = await expenseDao.getAllExpenses();
+    expenses = ObservableList<Expense>.of(expenseList);
     _sortExpenses();
+  }
+
+  @action
+  Future<void> addExpense(Expense expense) async {
+    if (expenses.any((e) => e.id == expense.id)) {
+      await expenseDao.updateExpense(expense);
+      final index = expenses.indexWhere((e) => e.id == expense.id);
+      if (index != -1) {
+        expenses[index] = expense;
+      }
+    } else {
+      await expenseDao.insertExpense(expense);
+      expenses.add(expense);
+    }
+    _sortExpenses();
+  }
+
+  @action
+  Future<void> removeExpense(Expense expense) async {
+    final expenseIndex = expenses.indexWhere((e) => e.id == expense.id);
+    expenses.removeAt(expenseIndex);
+    await expenseDao.deleteExpense(expense.id);
+    _sortExpenses();
+  }
+
+  Future<void> updateExpenseByExcludedCategory(int categoryId) async {
+    await expenseDao.updateExpenseByExcludedCategory(categoryId);
+    await _loadExpenses();
+  }
+
+  Future<void> updateExpenseByExcludedBank(int bankId) async {
+    await expenseDao.updateExpenseByExcludedBank(bankId);
+    await _loadExpenses();
+  }
+
+  hasDependencyOfBank(int bankId) {
+    return expenses.any((e) => e.bankId == bankId);
+  }
+
+  hasDependencyOfCategory(int categoryId) {
+    return expenses.any((e) => e.categoryId == categoryId);
   }
 
   void _sortExpenses() {
     expenses.sort((a, b) => b.createdDate.compareTo(a.createdDate));
-  }
-
-  @action
-  void addExpense(Expense expense) {
-    expenses.add(expense);
-    _sortExpenses();
-  }
-
-  @action
-  void removeExpense(Expense expense) {
-    final expenseIndex = expenses.indexWhere((e) => e.id == expense.id);
-    expenses.removeAt(expenseIndex);
-    _sortExpenses();
   }
 
   @computed

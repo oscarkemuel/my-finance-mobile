@@ -10,46 +10,29 @@ class BanksScreen extends StatelessWidget {
     super.key,
   });
 
-  void _openBankFormModal(BuildContext context) {
+  void _openBankFormModal(BuildContext context, [Bank? bank]) {
     final bankStore = Provider.of<BankStore>(context, listen: false);
 
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (_) {
-        return BankForm(
-          onSubmit: (bank) {
-            bankStore.addBank(bank);
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
-  }
+      builder: (BuildContext context) {
+        final double screenHeight = MediaQuery.of(context).size.height;
+        final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        final double height = (screenHeight - keyboardHeight) * 0.7;
 
-  void _openModalToDeleteBank(BuildContext context, Bank bank) {
-    final bankStore = Provider.of<BankStore>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text('Excluir "${bank.name}"'),
-          titleTextStyle: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-          content: const Text('Deseja realmente excluir este banco?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-                onPressed: () {
-                  bankStore.removeBank(bank);
-                  Navigator.of(context).pop();
-                },
-                child:
-                    const Text('Excluir', style: TextStyle(color: Colors.red))),
-          ],
+        return SizedBox(
+          height: height,
+          child: BankForm(
+            bank: bank,
+            onSubmit: (bank) {
+              bankStore.addBank(bank);
+              Navigator.of(context).pop();
+            },
+            onDelete: (bank) {
+              bankStore.removeBank(bank);
+            },
+          ),
         );
       },
     );
@@ -79,7 +62,7 @@ class BanksScreen extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: BankList(
-              onTap: (bank) => _openModalToDeleteBank(context, bank),
+              onTap: (bank) => _openBankFormModal(context, bank),
             ),
           )),
         ],

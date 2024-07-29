@@ -33,29 +33,28 @@ mixin _$IncomeStore on _IncomeStore, Store {
     });
   }
 
-  late final _$_IncomeStoreActionController =
-      ActionController(name: '_IncomeStore', context: context);
+  late final _$_loadIncomesAsyncAction =
+      AsyncAction('_IncomeStore._loadIncomes', context: context);
 
   @override
-  void addIncome(Income income) {
-    final _$actionInfo = _$_IncomeStoreActionController.startAction(
-        name: '_IncomeStore.addIncome');
-    try {
-      return super.addIncome(income);
-    } finally {
-      _$_IncomeStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> _loadIncomes() {
+    return _$_loadIncomesAsyncAction.run(() => super._loadIncomes());
   }
 
+  late final _$addIncomeAsyncAction =
+      AsyncAction('_IncomeStore.addIncome', context: context);
+
   @override
-  void removeIncome(Income income) {
-    final _$actionInfo = _$_IncomeStoreActionController.startAction(
-        name: '_IncomeStore.removeIncome');
-    try {
-      return super.removeIncome(income);
-    } finally {
-      _$_IncomeStoreActionController.endAction(_$actionInfo);
-    }
+  Future<dynamic> addIncome(Income income) {
+    return _$addIncomeAsyncAction.run(() => super.addIncome(income));
+  }
+
+  late final _$removeIncomeAsyncAction =
+      AsyncAction('_IncomeStore.removeIncome', context: context);
+
+  @override
+  Future<dynamic> removeIncome(Income income) {
+    return _$removeIncomeAsyncAction.run(() => super.removeIncome(income));
   }
 
   @override

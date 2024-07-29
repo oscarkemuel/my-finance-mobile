@@ -1,55 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart'; // Import MobX's Observer widget
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:my_finance/models/category.dart';
 import 'package:my_finance/stores/category.store.dart';
+import 'package:my_finance/utils/index.dart';
 import 'package:my_finance/widgets/category_form.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
 
-  void _openCategoryFormModal(BuildContext context) {
+  void _openCategoryFormModal(BuildContext context, [Category? category]) {
     final categoryStore = Provider.of<CategoryStore>(context, listen: false);
 
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return CategoryForm(
+          category: category,
           onSubmit: (category) {
             categoryStore.addCategory(category);
             Navigator.of(context).pop();
           },
+          onDelete: (category) {
+            categoryStore.removeCategory(category);
+          },
         );
       },
-    );
-  }
-
-  void _openModalToDeleteCategory(BuildContext context, Category category) {
-    final categoryStore = Provider.of<CategoryStore>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text('Excluir "${category.name}"'),
-          titleTextStyle: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-          content: const Text('Deseja realmente excluir esta categoria?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                categoryStore.removeCategory(category);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        );
-      },
+      isScrollControlled: true,
     );
   }
 
@@ -78,12 +55,7 @@ class CategoriesScreen extends StatelessWidget {
           Expanded(
             child: Observer(
               builder: (_) {
-                final List<Category> categoriesToShow =
-                    categoryStore.categories.length > 1
-                        ? categoryStore.categories.sublist(1)
-                        : [];
-
-                return categoriesToShow.isEmpty
+                return categoryStore.categories.isEmpty
                     ? const Center(
                         child: Text(
                           'Nenhuma categoria cadastrada.',
@@ -91,7 +63,7 @@ class CategoriesScreen extends StatelessWidget {
                         ),
                       )
                     : GridView.builder(
-                        itemCount: categoriesToShow.length,
+                        itemCount: categoryStore.categories.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -100,10 +72,10 @@ class CategoriesScreen extends StatelessWidget {
                           childAspectRatio: 1,
                         ),
                         itemBuilder: (context, index) {
-                          final category = categoriesToShow[index];
+                          final category = categoryStore.categories[index];
                           return GestureDetector(
                             onTap: () =>
-                                _openModalToDeleteCategory(context, category),
+                                _openCategoryFormModal(context, category),
                             child: GridTile(
                               footer: Center(
                                 child: Text(
@@ -113,7 +85,7 @@ class CategoriesScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              child: Icon(category.icon,
+                              child: Icon(Utils.iconMap[category.icon]!.icon,
                                   size: 40, color: Colors.grey[700]),
                             ),
                           );
